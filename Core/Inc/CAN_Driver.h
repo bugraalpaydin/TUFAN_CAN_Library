@@ -52,7 +52,7 @@ void CAN_CLOCK_ENABLE(void);
 void CAN_Setup(void);
 void CAN_StartNormalMode(void);
 void CAN_WaitReady(void);
-void CAN_TestMode(void);
+void CAN_TestMode(unsigned int testmode);
 void CAN_SetFilter(unsigned int id, unsigned char format);
 void CAN_WriteMessage(CAN_Msg *msg);
 void CAN_ReadMessage(CAN_Msg *msg);

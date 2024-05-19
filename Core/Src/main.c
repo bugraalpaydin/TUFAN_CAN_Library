@@ -18,11 +18,10 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "CAN_Driver.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "CAN_Driver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -41,7 +40,6 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-CAN_HandleTypeDef hcan;
 
 /* USER CODE BEGIN PV */
 
@@ -50,7 +48,6 @@ CAN_HandleTypeDef hcan;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_CAN_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -76,6 +73,19 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  CAN_CLOCK_ENABLE();
+  CAN_GPIO_Init();
+  CAN_Setup();
+  //CAN_TestMode(CAN_BTR_SILM | CAN_BTR_LBKM);
+  CAN_SetFilter(33, STANDARD_FORMAT);
+  CAN_StartNormalMode();
+  CAN_WaitReady();
+
+  CAN_TxMsg.id = 33;
+  for(int i = 0; i<8; i++) CAN_TxMsg.data[i] = 1;
+  CAN_TxMsg.len = 1;
+  CAN_TxMsg.format = STANDARD_FORMAT;
+  CAN_TxMsg.type   = DATA_FRAME;
 
   /* USER CODE END Init */
 
@@ -88,7 +98,6 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_CAN_Init();
   /* USER CODE BEGIN 2 */
   /* USER CODE END 2 */
 
@@ -96,6 +105,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+      if(CAN_TxRdy){
+        CAN_TxRdy = 0;
+
+        CAN_WriteMessage(&CAN_TxMsg);
+      }
+      HAL_Delay(100000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -139,43 +154,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-}
-
-/**
-  * @brief CAN Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_CAN_Init(void)
-{
-
-  /* USER CODE BEGIN CAN_Init 0 */
-
-  /* USER CODE END CAN_Init 0 */
-
-  /* USER CODE BEGIN CAN_Init 1 */
-
-  /* USER CODE END CAN_Init 1 */
-  hcan.Instance = CAN1;
-  hcan.Init.Prescaler = 9;
-  hcan.Init.Mode = CAN_MODE_LOOPBACK;
-  hcan.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan.Init.TimeSeg1 = CAN_BS1_10TQ;
-  hcan.Init.TimeSeg2 = CAN_BS2_5TQ;
-  hcan.Init.TimeTriggeredMode = DISABLE;
-  hcan.Init.AutoBusOff = DISABLE;
-  hcan.Init.AutoWakeUp = DISABLE;
-  hcan.Init.AutoRetransmission = ENABLE;
-  hcan.Init.ReceiveFifoLocked = DISABLE;
-  hcan.Init.TransmitFifoPriority = DISABLE;
-  if (HAL_CAN_Init(&hcan) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN CAN_Init 2 */
-  
-  /* USER CODE END CAN_Init 2 */
-
 }
 
 /**

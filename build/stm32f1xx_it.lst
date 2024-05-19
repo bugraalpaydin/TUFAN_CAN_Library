@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccTuqA9E.s 			page 1
+ARM GAS  /tmp/ccneWgPR.s 			page 1
 
 
    1              		.cpu cortex-m3
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccTuqA9E.s 			page 1
   30:Core/Src/stm32f1xx_it.c **** /* USER CODE END TD */
   31:Core/Src/stm32f1xx_it.c **** 
   32:Core/Src/stm32f1xx_it.c **** /* Private define ------------------------------------------------------------*/
-ARM GAS  /tmp/ccTuqA9E.s 			page 2
+ARM GAS  /tmp/ccneWgPR.s 			page 2
 
 
   33:Core/Src/stm32f1xx_it.c **** /* USER CODE BEGIN PD */
@@ -86,7 +86,7 @@ ARM GAS  /tmp/ccTuqA9E.s 			page 1
   55:Core/Src/stm32f1xx_it.c **** /* USER CODE END 0 */
   56:Core/Src/stm32f1xx_it.c **** 
   57:Core/Src/stm32f1xx_it.c **** /* External variables --------------------------------------------------------*/
-  58:Core/Src/stm32f1xx_it.c **** extern CAN_HandleTypeDef hcan;
+  58:Core/Src/stm32f1xx_it.c **** 
   59:Core/Src/stm32f1xx_it.c **** /* USER CODE BEGIN EV */
   60:Core/Src/stm32f1xx_it.c **** 
   61:Core/Src/stm32f1xx_it.c **** /* USER CODE END EV */
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccTuqA9E.s 			page 1
   75:Core/Src/stm32f1xx_it.c ****   {
   36              		.loc 1 75 10 view .LVU3
   37 0000 FEE7     		b	.L2
-ARM GAS  /tmp/ccTuqA9E.s 			page 3
+ARM GAS  /tmp/ccneWgPR.s 			page 3
 
 
   38              		.cfi_endproc
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccTuqA9E.s 			page 1
  100:Core/Src/stm32f1xx_it.c **** {
   73              		.loc 1 100 1 view -0
   74              		.cfi_startproc
-ARM GAS  /tmp/ccTuqA9E.s 			page 4
+ARM GAS  /tmp/ccneWgPR.s 			page 4
 
 
   75              		@ Volatile: function does not return.
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccTuqA9E.s 			page 1
  106 0000 FEE7     		b	.L8
  107              		.cfi_endproc
  108              	.LFE68:
-ARM GAS  /tmp/ccTuqA9E.s 			page 5
+ARM GAS  /tmp/ccneWgPR.s 			page 5
 
 
  110              		.section	.text.UsageFault_Handler,"ax",%progbits
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccTuqA9E.s 			page 1
  144              		@ args = 0, pretend = 0, frame = 0
  145              		@ frame_needed = 0, uses_anonymous_args = 0
  146              		@ link register save eliminated.
-ARM GAS  /tmp/ccTuqA9E.s 			page 6
+ARM GAS  /tmp/ccneWgPR.s 			page 6
 
 
  146:Core/Src/stm32f1xx_it.c ****   /* USER CODE BEGIN SVCall_IRQn 0 */
@@ -358,7 +358,7 @@ ARM GAS  /tmp/ccTuqA9E.s 			page 1
  171:Core/Src/stm32f1xx_it.c **** {
  180              		.loc 1 171 1 view -0
  181              		.cfi_startproc
-ARM GAS  /tmp/ccTuqA9E.s 			page 7
+ARM GAS  /tmp/ccneWgPR.s 			page 7
 
 
  182              		@ args = 0, pretend = 0, frame = 0
@@ -412,94 +412,32 @@ ARM GAS  /tmp/ccTuqA9E.s 			page 1
  211 0006 08BD     		pop	{r3, pc}
  212              		.cfi_endproc
  213              	.LFE73:
- 215              		.section	.text.USB_LP_CAN1_RX0_IRQHandler,"ax",%progbits
- 216              		.align	1
- 217              		.global	USB_LP_CAN1_RX0_IRQHandler
- 218              		.syntax unified
- 219              		.thumb
- 220              		.thumb_func
-ARM GAS  /tmp/ccTuqA9E.s 			page 8
-
-
- 222              	USB_LP_CAN1_RX0_IRQHandler:
- 223              	.LFB74:
- 193:Core/Src/stm32f1xx_it.c **** 
- 194:Core/Src/stm32f1xx_it.c **** /******************************************************************************/
- 195:Core/Src/stm32f1xx_it.c **** /* STM32F1xx Peripheral Interrupt Handlers                                    */
- 196:Core/Src/stm32f1xx_it.c **** /* Add here the Interrupt Handlers for the used peripherals.                  */
- 197:Core/Src/stm32f1xx_it.c **** /* For the available peripheral interrupt handler names,                      */
- 198:Core/Src/stm32f1xx_it.c **** /* please refer to the startup file (startup_stm32f1xx.s).                    */
- 199:Core/Src/stm32f1xx_it.c **** /******************************************************************************/
- 200:Core/Src/stm32f1xx_it.c **** 
- 201:Core/Src/stm32f1xx_it.c **** /**
- 202:Core/Src/stm32f1xx_it.c ****   * @brief This function handles USB low priority or CAN RX0 interrupts.
- 203:Core/Src/stm32f1xx_it.c ****   */
- 204:Core/Src/stm32f1xx_it.c **** void USB_LP_CAN1_RX0_IRQHandler(void)
- 205:Core/Src/stm32f1xx_it.c **** {
- 224              		.loc 1 205 1 is_stmt 1 view -0
- 225              		.cfi_startproc
- 226              		@ args = 0, pretend = 0, frame = 0
- 227              		@ frame_needed = 0, uses_anonymous_args = 0
- 228 0000 08B5     		push	{r3, lr}
- 229              		.cfi_def_cfa_offset 8
- 230              		.cfi_offset 3, -8
- 231              		.cfi_offset 14, -4
- 206:Core/Src/stm32f1xx_it.c ****   /* USER CODE BEGIN USB_LP_CAN1_RX0_IRQn 0 */
- 207:Core/Src/stm32f1xx_it.c **** 
- 208:Core/Src/stm32f1xx_it.c ****   /* USER CODE END USB_LP_CAN1_RX0_IRQn 0 */
- 209:Core/Src/stm32f1xx_it.c ****   HAL_CAN_IRQHandler(&hcan);
- 232              		.loc 1 209 3 view .LVU30
- 233 0002 0248     		ldr	r0, .L18
- 234 0004 FFF7FEFF 		bl	HAL_CAN_IRQHandler
- 235              	.LVL1:
- 210:Core/Src/stm32f1xx_it.c ****   /* USER CODE BEGIN USB_LP_CAN1_RX0_IRQn 1 */
- 211:Core/Src/stm32f1xx_it.c **** 
- 212:Core/Src/stm32f1xx_it.c ****   /* USER CODE END USB_LP_CAN1_RX0_IRQn 1 */
- 213:Core/Src/stm32f1xx_it.c **** }
- 236              		.loc 1 213 1 is_stmt 0 view .LVU31
- 237 0008 08BD     		pop	{r3, pc}
- 238              	.L19:
- 239 000a 00BF     		.align	2
- 240              	.L18:
- 241 000c 00000000 		.word	hcan
- 242              		.cfi_endproc
- 243              	.LFE74:
- 245              		.text
- 246              	.Letext0:
- 247              		.file 2 "/home/bugraaa/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/arm-n
- 248              		.file 3 "/home/bugraaa/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/arm-n
- 249              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
- 250              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h"
- 251              		.file 6 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_can.h"
- 252              		.file 7 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
-ARM GAS  /tmp/ccTuqA9E.s 			page 9
+ 215              		.text
+ 216              	.Letext0:
+ 217              		.file 2 "Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h"
+ARM GAS  /tmp/ccneWgPR.s 			page 8
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 stm32f1xx_it.c
-     /tmp/ccTuqA9E.s:19     .text.NMI_Handler:00000000 $t
-     /tmp/ccTuqA9E.s:25     .text.NMI_Handler:00000000 NMI_Handler
-     /tmp/ccTuqA9E.s:42     .text.HardFault_Handler:00000000 $t
-     /tmp/ccTuqA9E.s:48     .text.HardFault_Handler:00000000 HardFault_Handler
-     /tmp/ccTuqA9E.s:65     .text.MemManage_Handler:00000000 $t
-     /tmp/ccTuqA9E.s:71     .text.MemManage_Handler:00000000 MemManage_Handler
-     /tmp/ccTuqA9E.s:88     .text.BusFault_Handler:00000000 $t
-     /tmp/ccTuqA9E.s:94     .text.BusFault_Handler:00000000 BusFault_Handler
-     /tmp/ccTuqA9E.s:111    .text.UsageFault_Handler:00000000 $t
-     /tmp/ccTuqA9E.s:117    .text.UsageFault_Handler:00000000 UsageFault_Handler
-     /tmp/ccTuqA9E.s:134    .text.SVC_Handler:00000000 $t
-     /tmp/ccTuqA9E.s:140    .text.SVC_Handler:00000000 SVC_Handler
-     /tmp/ccTuqA9E.s:153    .text.DebugMon_Handler:00000000 $t
-     /tmp/ccTuqA9E.s:159    .text.DebugMon_Handler:00000000 DebugMon_Handler
-     /tmp/ccTuqA9E.s:172    .text.PendSV_Handler:00000000 $t
-     /tmp/ccTuqA9E.s:178    .text.PendSV_Handler:00000000 PendSV_Handler
-     /tmp/ccTuqA9E.s:191    .text.SysTick_Handler:00000000 $t
-     /tmp/ccTuqA9E.s:197    .text.SysTick_Handler:00000000 SysTick_Handler
-     /tmp/ccTuqA9E.s:216    .text.USB_LP_CAN1_RX0_IRQHandler:00000000 $t
-     /tmp/ccTuqA9E.s:222    .text.USB_LP_CAN1_RX0_IRQHandler:00000000 USB_LP_CAN1_RX0_IRQHandler
-     /tmp/ccTuqA9E.s:241    .text.USB_LP_CAN1_RX0_IRQHandler:0000000c $d
+     /tmp/ccneWgPR.s:19     .text.NMI_Handler:00000000 $t
+     /tmp/ccneWgPR.s:25     .text.NMI_Handler:00000000 NMI_Handler
+     /tmp/ccneWgPR.s:42     .text.HardFault_Handler:00000000 $t
+     /tmp/ccneWgPR.s:48     .text.HardFault_Handler:00000000 HardFault_Handler
+     /tmp/ccneWgPR.s:65     .text.MemManage_Handler:00000000 $t
+     /tmp/ccneWgPR.s:71     .text.MemManage_Handler:00000000 MemManage_Handler
+     /tmp/ccneWgPR.s:88     .text.BusFault_Handler:00000000 $t
+     /tmp/ccneWgPR.s:94     .text.BusFault_Handler:00000000 BusFault_Handler
+     /tmp/ccneWgPR.s:111    .text.UsageFault_Handler:00000000 $t
+     /tmp/ccneWgPR.s:117    .text.UsageFault_Handler:00000000 UsageFault_Handler
+     /tmp/ccneWgPR.s:134    .text.SVC_Handler:00000000 $t
+     /tmp/ccneWgPR.s:140    .text.SVC_Handler:00000000 SVC_Handler
+     /tmp/ccneWgPR.s:153    .text.DebugMon_Handler:00000000 $t
+     /tmp/ccneWgPR.s:159    .text.DebugMon_Handler:00000000 DebugMon_Handler
+     /tmp/ccneWgPR.s:172    .text.PendSV_Handler:00000000 $t
+     /tmp/ccneWgPR.s:178    .text.PendSV_Handler:00000000 PendSV_Handler
+     /tmp/ccneWgPR.s:191    .text.SysTick_Handler:00000000 $t
+     /tmp/ccneWgPR.s:197    .text.SysTick_Handler:00000000 SysTick_Handler
 
 UNDEFINED SYMBOLS
 HAL_IncTick
-HAL_CAN_IRQHandler
-hcan

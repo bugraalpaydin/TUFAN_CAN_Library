@@ -54,8 +54,8 @@ void CAN_CLOCK_ENABLE(void){
     RCC -> APB1ENR |= (1<<25);
 }
 void CAN_Setup(void){
-    NVIC -> ISER[0] |= (1<< (USB_HP_CAN1_TX_IRQn & 0x1F));
-    NVIC -> ISER[0] |= (1<< (USB_LP_CAN1_RX0_IRQn & 0x1F));
+    //NVIC -> ISER[0] |= (1<< (USB_HP_CAN1_TX_IRQn & 0x1F));
+    //NVIC -> ISER[0] |= (1<< (USB_LP_CAN1_RX0_IRQn & 0x1F));
 
     //Initialization Request
     CAN1 -> MCR |= (1<<0);
@@ -85,9 +85,9 @@ void CAN_StartNormalMode(void){
 
 
 //SET THE TEST MODE
-void CAN_TestMode(void){
-    //CAN->BTR &= ~(CAN_BTR_SILM | CAN_BTR_LBKM);     // set testmode
-    //CAN->BTR |=  (testmode & (CAN_BTR_SILM | CAN_BTR_LBKM));
+void CAN_TestMode(unsigned int testmode){
+    CAN1->BTR &= ~(CAN_BTR_SILM | CAN_BTR_LBKM);     // set testmode
+    CAN1->BTR |=  (testmode & (CAN_BTR_SILM | CAN_BTR_LBKM));
 }
 
 
@@ -103,28 +103,29 @@ void CAN_WriteMessage(CAN_Msg *msg){
     CAN1->sTxMailBox[0].TIR = (unsigned int)0; // reset TIR register
 
     if(msg->format == STANDARD_FORMAT) // Setup identifier information, standard ID
-        CAN1 -> sTxMailBox[0].TIR |= (unsigned int)(msg->id << 21) | CAN_ID_STD;
+        CAN1 -> sTxMailBox[0].TIR |= (unsigned int)(msg->id << 21) | (0x00000000U);
     else // extended ID
-        CAN1 -> sTxMailBox[0].TIR |= (unsigned int)(msg->id << 3) | CAN_ID_EXT;
+        CAN1 -> sTxMailBox[0].TIR |= (unsigned int)(msg->id << 3) | (0x00000004U);
     // Setup type information
     if(msg->type == DATA_FRAME) // Data frame
-        CAN1 -> sTxMailBox[0].TIR |= CAN_RTR_DATA;
+        CAN1 -> sTxMailBox[0].TIR |= (0x00000000U);
     else    //remote frame
-        CAN1 -> sTxMailBox[0].TIR |= CAN_RTR_REMOTE;
+        CAN1 -> sTxMailBox[0].TIR |= (0x00000002U);
 
     // Setup data bytes
     CAN1->sTxMailBox[0].TDLR = (((unsigned int)msg->data[3] << 24) | 
                                 ((unsigned int)msg->data[2] << 16) |
                                 ((unsigned int)msg->data[1] <<  8) | 
-                                ((unsigned int)msg->data[0]));
+                              
+  ((unsigned int)msg->data[0]));
     CAN1->sTxMailBox[0].TDHR = (((unsigned int)msg->data[7] << 24) | 
                                 ((unsigned int)msg->data[6] << 16) |
                                 ((unsigned int)msg->data[5] <<  8) |
                                 ((unsigned int)msg->data[4]));
 
     //SETUP LENGTH
-    CAN1 -> sTxMailBox[0].TDTR &= ~CAN_TDT0R_DLC;
-    CAN1 -> sTxMailBox[0].TDTR |= (msg->len & CAN_TDT0R_DLC);
+    CAN1 -> sTxMailBox[0].TDTR &= ~(0xFUL << (0U));
+    CAN1 -> sTxMailBox[0].TDTR |= (msg->len & (0xFUL << (0U)));
 
     CAN1 -> IER |= CAN_IER_TMEIE;                   // Enable TME interrup
     CAN1 -> sTxMailBox[0].TIR |= CAN_TI0R_TXRQ;     // Transmit message
@@ -144,10 +145,11 @@ void CAN_SetFilter(unsigned int id, unsigned char format){
     }
 
     if (format == 0){
-        CAN_MsgId |= (unsigned int)(id<<21) | CAN_ID_STD;
+        CAN_MsgId |= (unsigned int)(id<<21) | (0x00000000U);
     }
     else {
-        CAN_MsgId |= (unsigned int)(id<<3) | CAN_ID_EXT;
+        CAN_MsgId |= (unsigned int)(id<<3) | (0x00000004U)
+;
     }
     //SET INITIALIZATION MODE FOR FILTER BANKS
     CAN1->FMR |= (1<<0); 
@@ -198,6 +200,7 @@ void CAN_GPIO_Init(void){
 
 
 
+/*
 //CAN TRANSMIT INTERRUPT HANDLER
 void USB_HP_CAN1_TX_IRQHandler(void){
 
@@ -217,3 +220,5 @@ void USB_LP_CAN1_RX0_IRQHandler(void){
         CAN_RxRdy = 1;                  // set receive flag
     }
 }
+
+*/
