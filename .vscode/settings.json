@@ -5,6 +5,7 @@
     "files.associations": {
         "stm32f1xx.h": "c",
         "can_driver.h": "c",
-        "stm32f1xx_hal_can.h": "c"
+        "stm32f1xx_hal_can.h": "c",
+        "stm32f1xx_ll_rcc.h": "c"
     }
 }

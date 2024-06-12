@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccG9i6Tn.s 			page 1
+ARM GAS  /tmp/ccgfVqt0.s 			page 1
 
 
    1              		.cpu cortex-m3
@@ -18,13 +18,13 @@ ARM GAS  /tmp/ccG9i6Tn.s 			page 1
   15              	.Ltext0:
   16              		.cfi_sections	.debug_frame
   17              		.file 1 "Core/Src/CAN_Driver.c"
-  18              		.section	.text.CAN_CLOCK_ENABLE,"ax",%progbits
+  18              		.section	.text.TUFAN_CAN_CLOCK_ENABLE,"ax",%progbits
   19              		.align	1
-  20              		.global	CAN_CLOCK_ENABLE
+  20              		.global	TUFAN_CAN_CLOCK_ENABLE
   21              		.syntax unified
   22              		.thumb
   23              		.thumb_func
-  25              	CAN_CLOCK_ENABLE:
+  25              	TUFAN_CAN_CLOCK_ENABLE:
   26              	.LFB65:
    1:Core/Src/CAN_Driver.c **** /*
    2:Core/Src/CAN_Driver.c ****     INITALIZATION MODE::
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccG9i6Tn.s 			page 1
   30:Core/Src/CAN_Driver.c **** 
   31:Core/Src/CAN_Driver.c **** 
   32:Core/Src/CAN_Driver.c **** 
-ARM GAS  /tmp/ccG9i6Tn.s 			page 2
+ARM GAS  /tmp/ccgfVqt0.s 			page 2
 
 
   33:Core/Src/CAN_Driver.c ****     CAN_TX (Transmit Data line) Alternate Function push-pull
@@ -67,863 +67,1356 @@ ARM GAS  /tmp/ccG9i6Tn.s 			page 1
   36:Core/Src/CAN_Driver.c ****     CAN1_TX or CAN_TX PA12
   37:Core/Src/CAN_Driver.c **** */
   38:Core/Src/CAN_Driver.c **** 
-  39:Core/Src/CAN_Driver.c **** #include "CAN_Driver.h"
+  39:Core/Src/CAN_Driver.c **** 
   40:Core/Src/CAN_Driver.c **** 
-  41:Core/Src/CAN_Driver.c **** CAN_Msg CAN_TxMsg;
-  42:Core/Src/CAN_Driver.c **** CAN_Msg CAN_RxMsg;
-  43:Core/Src/CAN_Driver.c **** 
-  44:Core/Src/CAN_Driver.c **** unsigned int CAN_TxRdy = 0;
-  45:Core/Src/CAN_Driver.c **** unsigned int CAN_RxRdy = 0;
-  46:Core/Src/CAN_Driver.c **** 
+  41:Core/Src/CAN_Driver.c **** /*
+  42:Core/Src/CAN_Driver.c ****     RCC -> BASE ADDRESS 0x4002 1000
+  43:Core/Src/CAN_Driver.c ****     RCC -> APB2ENR OFFSET 0x18
+  44:Core/Src/CAN_Driver.c ****     RCC -> APB1ENR OFFSET 0x1C 
+  45:Core/Src/CAN_Driver.c ****     GPIOA -> BASE ADDRESS 0x4001 0800 
+  46:Core/Src/CAN_Driver.c ****     GPIOA -> CRH OFFSET 0x04
   47:Core/Src/CAN_Driver.c **** 
-  48:Core/Src/CAN_Driver.c **** void CAN_CLOCK_ENABLE(void){
-  27              		.loc 1 48 28 view -0
+  48:Core/Src/CAN_Driver.c ****     AFIO -> BASE ADDRESS 0x4001 0000
+  49:Core/Src/CAN_Driver.c ****     AFIO -> MAPR OFFSETT 0x04
+  50:Core/Src/CAN_Driver.c ****     <Xz
+  51:Core/Src/CAN_Driver.c **** 
+  52:Core/Src/CAN_Driver.c **** */
+  53:Core/Src/CAN_Driver.c **** 
+  54:Core/Src/CAN_Driver.c **** #include "CAN_Driver.h"
+  55:Core/Src/CAN_Driver.c **** #include "stm32f1xx.h"
+  56:Core/Src/CAN_Driver.c **** 
+  57:Core/Src/CAN_Driver.c **** CAN_Msg CAN_TxMsg;
+  58:Core/Src/CAN_Driver.c **** CAN_Msg CAN_RxMsg;
+  59:Core/Src/CAN_Driver.c **** 
+  60:Core/Src/CAN_Driver.c **** unsigned int CAN_TxRdy = 0;
+  61:Core/Src/CAN_Driver.c **** unsigned int CAN_RxRdy = 0;
+  62:Core/Src/CAN_Driver.c **** 
+  63:Core/Src/CAN_Driver.c **** 
+  64:Core/Src/CAN_Driver.c **** void TUFAN_CAN_CLOCK_ENABLE(void){
+  27              		.loc 1 64 34 view -0
   28              		.cfi_startproc
   29              		@ args = 0, pretend = 0, frame = 0
   30              		@ frame_needed = 0, uses_anonymous_args = 0
   31              		@ link register save eliminated.
-  49:Core/Src/CAN_Driver.c ****     //Alternate function enable
-  50:Core/Src/CAN_Driver.c ****     RCC -> APB2ENR |= (1<<0);
-  32              		.loc 1 50 5 view .LVU1
-  33              		.loc 1 50 9 is_stmt 0 view .LVU2
-  34 0000 064B     		ldr	r3, .L2
-  35 0002 9A69     		ldr	r2, [r3, #24]
-  36              		.loc 1 50 20 view .LVU3
-  37 0004 42F00102 		orr	r2, r2, #1
-  38 0008 9A61     		str	r2, [r3, #24]
-  51:Core/Src/CAN_Driver.c ****     //GPIOA clock enable
-  52:Core/Src/CAN_Driver.c ****     RCC -> APB2ENR |= (1<<2);
-  39              		.loc 1 52 5 is_stmt 1 view .LVU4
-  40              		.loc 1 52 9 is_stmt 0 view .LVU5
-  41 000a 9A69     		ldr	r2, [r3, #24]
-  42              		.loc 1 52 20 view .LVU6
-  43 000c 42F00402 		orr	r2, r2, #4
-  44 0010 9A61     		str	r2, [r3, #24]
-  53:Core/Src/CAN_Driver.c ****     //CAN1 clock enable
-  54:Core/Src/CAN_Driver.c ****     RCC -> APB1ENR |= (1<<25);
-  45              		.loc 1 54 5 is_stmt 1 view .LVU7
-  46              		.loc 1 54 9 is_stmt 0 view .LVU8
-  47 0012 DA69     		ldr	r2, [r3, #28]
-  48              		.loc 1 54 20 view .LVU9
-  49 0014 42F00072 		orr	r2, r2, #33554432
-  50 0018 DA61     		str	r2, [r3, #28]
-  55:Core/Src/CAN_Driver.c **** }
-  51              		.loc 1 55 1 view .LVU10
-  52 001a 7047     		bx	lr
-  53              	.L3:
-  54              		.align	2
-  55              	.L2:
-  56 001c 00100240 		.word	1073876992
-  57              		.cfi_endproc
-  58              	.LFE65:
-  60              		.section	.text.CAN_Setup,"ax",%progbits
-  61              		.align	1
-ARM GAS  /tmp/ccG9i6Tn.s 			page 3
+  65:Core/Src/CAN_Driver.c ****     RCC->CR       |= (1<<16);                 //Enable HSE
+  32              		.loc 1 65 5 view .LVU1
+  33              		.loc 1 65 8 is_stmt 0 view .LVU2
+  34 0000 2D4A     		ldr	r2, .L3
+  35 0002 1368     		ldr	r3, [r2]
+  36              		.loc 1 65 19 view .LVU3
+  37 0004 43F48033 		orr	r3, r3, #65536
+  38 0008 1360     		str	r3, [r2]
+  66:Core/Src/CAN_Driver.c **** 
+  67:Core/Src/CAN_Driver.c ****     while((RCC->CR & (1<<17)) == RESET);   //Wait for HSE to turn ON
+  39              		.loc 1 67 5 is_stmt 1 view .LVU4
+  40              	.L2:
+  41              		.loc 1 67 31 discriminator 1 view .LVU5
+  42              		.loc 1 67 15 is_stmt 0 discriminator 1 view .LVU6
+  43 000a 2B4B     		ldr	r3, .L3
+  44 000c 1B68     		ldr	r3, [r3]
+  45              		.loc 1 67 31 discriminator 1 view .LVU7
+  46 000e 13F4003F 		tst	r3, #131072
+  47 0012 FAD0     		beq	.L2
+  68:Core/Src/CAN_Driver.c **** 
+ARM GAS  /tmp/ccgfVqt0.s 			page 3
 
 
-  62              		.global	CAN_Setup
-  63              		.syntax unified
-  64              		.thumb
-  65              		.thumb_func
-  67              	CAN_Setup:
-  68              	.LFB66:
-  56:Core/Src/CAN_Driver.c **** void CAN_Setup(void){
-  69              		.loc 1 56 21 is_stmt 1 view -0
-  70              		.cfi_startproc
-  71              		@ args = 0, pretend = 0, frame = 0
-  72              		@ frame_needed = 0, uses_anonymous_args = 0
-  73              		@ link register save eliminated.
-  57:Core/Src/CAN_Driver.c ****     //NVIC -> ISER[0] |= (1<< (USB_HP_CAN1_TX_IRQn & 0x1F));
-  58:Core/Src/CAN_Driver.c ****     //NVIC -> ISER[0] |= (1<< (USB_LP_CAN1_RX0_IRQn & 0x1F));
-  59:Core/Src/CAN_Driver.c **** 
-  60:Core/Src/CAN_Driver.c ****     //Initialization Request
-  61:Core/Src/CAN_Driver.c ****     CAN1 -> MCR |= (1<<0);
-  74              		.loc 1 61 5 view .LVU12
-  75              		.loc 1 61 10 is_stmt 0 view .LVU13
-  76 0000 0C4B     		ldr	r3, .L5
-  77 0002 1A68     		ldr	r2, [r3]
-  78              		.loc 1 61 17 view .LVU14
-  79 0004 42F00102 		orr	r2, r2, #1
-  80 0008 1A60     		str	r2, [r3]
-  62:Core/Src/CAN_Driver.c ****     // No automatic retransmission
-  63:Core/Src/CAN_Driver.c ****     CAN1 -> MCR |= (1<<4);
-  81              		.loc 1 63 5 is_stmt 1 view .LVU15
-  82              		.loc 1 63 10 is_stmt 0 view .LVU16
-  83 000a 1A68     		ldr	r2, [r3]
-  84              		.loc 1 63 17 view .LVU17
-  85 000c 42F01002 		orr	r2, r2, #16
-  86 0010 1A60     		str	r2, [r3]
-  64:Core/Src/CAN_Driver.c ****     // Auto retransmit
-  65:Core/Src/CAN_Driver.c ****     //CAN1 -> MCR &= ~(1<<4);
-  66:Core/Src/CAN_Driver.c ****     
-  67:Core/Src/CAN_Driver.c ****     //FIFO message pending interrupt enable
-  68:Core/Src/CAN_Driver.c ****     CAN1 -> IER |= (1<<0);
-  87              		.loc 1 68 5 is_stmt 1 view .LVU18
-  88              		.loc 1 68 10 is_stmt 0 view .LVU19
-  89 0012 5A69     		ldr	r2, [r3, #20]
-  90              		.loc 1 68 17 view .LVU20
-  91 0014 42F00102 		orr	r2, r2, #1
-  92 0018 5A61     		str	r2, [r3, #20]
-  69:Core/Src/CAN_Driver.c ****     //Transmit mailbox empty interrupt enable
-  70:Core/Src/CAN_Driver.c ****     CAN1 -> IER |= (1<<1);
-  93              		.loc 1 70 5 is_stmt 1 view .LVU21
-  94              		.loc 1 70 10 is_stmt 0 view .LVU22
-  95 001a 5A69     		ldr	r2, [r3, #20]
-  96              		.loc 1 70 17 view .LVU23
-  97 001c 42F00202 		orr	r2, r2, #2
-  98 0020 5A61     		str	r2, [r3, #20]
-  71:Core/Src/CAN_Driver.c **** 
-  72:Core/Src/CAN_Driver.c ****     int brp = 500000;
-  99              		.loc 1 72 5 is_stmt 1 view .LVU24
- 100              	.LVL0:
+  69:Core/Src/CAN_Driver.c ****     RCC->CR       |=  (1<<24);             //Enable PLL
+  48              		.loc 1 69 5 is_stmt 1 view .LVU8
+  49              		.loc 1 69 8 is_stmt 0 view .LVU9
+  50 0014 284B     		ldr	r3, .L3
+  51 0016 1A68     		ldr	r2, [r3]
+  52              		.loc 1 69 19 view .LVU10
+  53 0018 42F08072 		orr	r2, r2, #16777216
+  54 001c 1A60     		str	r2, [r3]
+  70:Core/Src/CAN_Driver.c ****     
+  71:Core/Src/CAN_Driver.c ****     RCC->CFGR     |=  (1<<16);           //HSE clock selected as PLL input clock
+  55              		.loc 1 71 5 is_stmt 1 view .LVU11
+  56              		.loc 1 71 8 is_stmt 0 view .LVU12
+  57 001e 5A68     		ldr	r2, [r3, #4]
+  58              		.loc 1 71 19 view .LVU13
+  59 0020 42F48032 		orr	r2, r2, #65536
+  60 0024 5A60     		str	r2, [r3, #4]
+  72:Core/Src/CAN_Driver.c ****     RCC->CFGR     &= ~(1<<17);           //HSE clock bit not divided before PLL entry
+  61              		.loc 1 72 5 is_stmt 1 view .LVU14
+  62              		.loc 1 72 8 is_stmt 0 view .LVU15
+  63 0026 5A68     		ldr	r2, [r3, #4]
+  64              		.loc 1 72 19 view .LVU16
+  65 0028 22F40032 		bic	r2, r2, #131072
+  66 002c 5A60     		str	r2, [r3, #4]
   73:Core/Src/CAN_Driver.c **** 
-  74:Core/Src/CAN_Driver.c ****     CAN1 -> BTR &= ~(((        0x03) << 24) | ((        0x07) << 20) | ((         0x0F) << 16) | ( 
-ARM GAS  /tmp/ccG9i6Tn.s 			page 4
+  74:Core/Src/CAN_Driver.c ****     //PLL Multiplication factor x9 (0111)
+  75:Core/Src/CAN_Driver.c ****     RCC->CFGR     &= ~(1<<21); 
+  67              		.loc 1 75 5 is_stmt 1 view .LVU17
+  68              		.loc 1 75 8 is_stmt 0 view .LVU18
+  69 002e 5A68     		ldr	r2, [r3, #4]
+  70              		.loc 1 75 19 view .LVU19
+  71 0030 22F40012 		bic	r2, r2, #2097152
+  72 0034 5A60     		str	r2, [r3, #4]
+  76:Core/Src/CAN_Driver.c ****     RCC->CFGR     |=  (1<<20);
+  73              		.loc 1 76 5 is_stmt 1 view .LVU20
+  74              		.loc 1 76 8 is_stmt 0 view .LVU21
+  75 0036 5A68     		ldr	r2, [r3, #4]
+  76              		.loc 1 76 19 view .LVU22
+  77 0038 42F48012 		orr	r2, r2, #1048576
+  78 003c 5A60     		str	r2, [r3, #4]
+  77:Core/Src/CAN_Driver.c ****     RCC->CFGR     |=  (1<<19);
+  79              		.loc 1 77 5 is_stmt 1 view .LVU23
+  80              		.loc 1 77 8 is_stmt 0 view .LVU24
+  81 003e 5A68     		ldr	r2, [r3, #4]
+  82              		.loc 1 77 19 view .LVU25
+  83 0040 42F40022 		orr	r2, r2, #524288
+  84 0044 5A60     		str	r2, [r3, #4]
+  78:Core/Src/CAN_Driver.c ****     RCC->CFGR     |=  (1<<18);
+  85              		.loc 1 78 5 is_stmt 1 view .LVU26
+  86              		.loc 1 78 8 is_stmt 0 view .LVU27
+  87 0046 5A68     		ldr	r2, [r3, #4]
+  88              		.loc 1 78 19 view .LVU28
+  89 0048 42F48022 		orr	r2, r2, #262144
+  90 004c 5A60     		str	r2, [r3, #4]
+  79:Core/Src/CAN_Driver.c **** 
+  80:Core/Src/CAN_Driver.c ****     //PLL selected as system clock 
+  81:Core/Src/CAN_Driver.c ****     RCC->CFGR     |=  (1<<1);
+  91              		.loc 1 81 5 is_stmt 1 view .LVU29
+ARM GAS  /tmp/ccgfVqt0.s 			page 4
 
 
- 101              		.loc 1 74 5 view .LVU25
- 102              		.loc 1 74 10 is_stmt 0 view .LVU26
- 103 0022 D969     		ldr	r1, [r3, #28]
- 104              		.loc 1 74 17 view .LVU27
- 105 0024 044A     		ldr	r2, .L5+4
- 106 0026 0A40     		ands	r2, r2, r1
- 107 0028 DA61     		str	r2, [r3, #28]
-  75:Core/Src/CAN_Driver.c ****     CAN1 -> BTR |=  ((((4-1) & 0x03) << 24) | (((5-1) & 0x07) << 20) | (((12-1) & 0x0F) << 16) | ((
- 108              		.loc 1 75 5 is_stmt 1 view .LVU28
- 109              		.loc 1 75 10 is_stmt 0 view .LVU29
- 110 002a D969     		ldr	r1, [r3, #28]
- 111              		.loc 1 75 17 view .LVU30
- 112 002c 034A     		ldr	r2, .L5+8
- 113 002e 0A43     		orrs	r2, r2, r1
- 114 0030 DA61     		str	r2, [r3, #28]
-  76:Core/Src/CAN_Driver.c **** }
- 115              		.loc 1 76 1 view .LVU31
- 116 0032 7047     		bx	lr
- 117              	.L6:
- 118              		.align	2
- 119              	.L5:
- 120 0034 00640040 		.word	1073767424
- 121 0038 00FE80FC 		.word	-58655232
- 122 003c 1F014B03 		.word	55247135
- 123              		.cfi_endproc
- 124              	.LFE66:
- 126              		.section	.text.CAN_StartNormalMode,"ax",%progbits
- 127              		.align	1
- 128              		.global	CAN_StartNormalMode
- 129              		.syntax unified
- 130              		.thumb
- 131              		.thumb_func
- 133              	CAN_StartNormalMode:
- 134              	.LFB67:
-  77:Core/Src/CAN_Driver.c **** 
-  78:Core/Src/CAN_Driver.c **** 
-  79:Core/Src/CAN_Driver.c **** //LEAVE INITIALIZATION MODE 
-  80:Core/Src/CAN_Driver.c **** void CAN_StartNormalMode(void){
- 135              		.loc 1 80 31 is_stmt 1 view -0
- 136              		.cfi_startproc
- 137              		@ args = 0, pretend = 0, frame = 0
- 138              		@ frame_needed = 0, uses_anonymous_args = 0
- 139              		@ link register save eliminated.
-  81:Core/Src/CAN_Driver.c ****     //Normal operating mode , reset INRQ 
-  82:Core/Src/CAN_Driver.c ****     CAN1 -> MCR &= ~(1<<0);
- 140              		.loc 1 82 5 view .LVU33
- 141              		.loc 1 82 10 is_stmt 0 view .LVU34
- 142 0000 054A     		ldr	r2, .L9
- 143 0002 1368     		ldr	r3, [r2]
- 144              		.loc 1 82 17 view .LVU35
- 145 0004 23F00103 		bic	r3, r3, #1
- 146 0008 1360     		str	r3, [r2]
-  83:Core/Src/CAN_Driver.c ****     while (CAN1->MSR & (1<<0));
- 147              		.loc 1 83 5 is_stmt 1 view .LVU36
- 148              	.L8:
- 149              		.loc 1 83 12 discriminator 1 view .LVU37
- 150              		.loc 1 83 16 is_stmt 0 discriminator 1 view .LVU38
-ARM GAS  /tmp/ccG9i6Tn.s 			page 5
+  92              		.loc 1 81 8 is_stmt 0 view .LVU30
+  93 004e 5A68     		ldr	r2, [r3, #4]
+  94              		.loc 1 81 19 view .LVU31
+  95 0050 42F00202 		orr	r2, r2, #2
+  96 0054 5A60     		str	r2, [r3, #4]
+  82:Core/Src/CAN_Driver.c ****     RCC->CFGR     &= ~(1<<0);
+  97              		.loc 1 82 5 is_stmt 1 view .LVU32
+  98              		.loc 1 82 8 is_stmt 0 view .LVU33
+  99 0056 5A68     		ldr	r2, [r3, #4]
+ 100              		.loc 1 82 19 view .LVU34
+ 101 0058 22F00102 		bic	r2, r2, #1
+ 102 005c 5A60     		str	r2, [r3, #4]
+  83:Core/Src/CAN_Driver.c **** 
+  84:Core/Src/CAN_Driver.c ****     //AHB prescaler System clock not divided
+  85:Core/Src/CAN_Driver.c ****     RCC->CFGR     &= ~(1<<7);
+ 103              		.loc 1 85 5 is_stmt 1 view .LVU35
+ 104              		.loc 1 85 8 is_stmt 0 view .LVU36
+ 105 005e 5A68     		ldr	r2, [r3, #4]
+ 106              		.loc 1 85 19 view .LVU37
+ 107 0060 22F08002 		bic	r2, r2, #128
+ 108 0064 5A60     		str	r2, [r3, #4]
+  86:Core/Src/CAN_Driver.c ****     RCC->CFGR     &= ~(1<<6);
+ 109              		.loc 1 86 5 is_stmt 1 view .LVU38
+ 110              		.loc 1 86 8 is_stmt 0 view .LVU39
+ 111 0066 5A68     		ldr	r2, [r3, #4]
+ 112              		.loc 1 86 19 view .LVU40
+ 113 0068 22F04002 		bic	r2, r2, #64
+ 114 006c 5A60     		str	r2, [r3, #4]
+  87:Core/Src/CAN_Driver.c ****     RCC->CFGR     &= ~(1<<5);
+ 115              		.loc 1 87 5 is_stmt 1 view .LVU41
+ 116              		.loc 1 87 8 is_stmt 0 view .LVU42
+ 117 006e 5A68     		ldr	r2, [r3, #4]
+ 118              		.loc 1 87 19 view .LVU43
+ 119 0070 22F02002 		bic	r2, r2, #32
+ 120 0074 5A60     		str	r2, [r3, #4]
+  88:Core/Src/CAN_Driver.c ****     RCC->CFGR     &= ~(1<<4);
+ 121              		.loc 1 88 5 is_stmt 1 view .LVU44
+ 122              		.loc 1 88 8 is_stmt 0 view .LVU45
+ 123 0076 5A68     		ldr	r2, [r3, #4]
+ 124              		.loc 1 88 19 view .LVU46
+ 125 0078 22F01002 		bic	r2, r2, #16
+ 126 007c 5A60     		str	r2, [r3, #4]
+  89:Core/Src/CAN_Driver.c **** 
+  90:Core/Src/CAN_Driver.c ****     //APB1 Prescaler /2 (SYSCLK divided by 2) (1000)
+  91:Core/Src/CAN_Driver.c ****     RCC->CFGR     |=  (1<<7);
+ 127              		.loc 1 91 5 is_stmt 1 view .LVU47
+ 128              		.loc 1 91 8 is_stmt 0 view .LVU48
+ 129 007e 5A68     		ldr	r2, [r3, #4]
+ 130              		.loc 1 91 19 view .LVU49
+ 131 0080 42F08002 		orr	r2, r2, #128
+ 132 0084 5A60     		str	r2, [r3, #4]
+  92:Core/Src/CAN_Driver.c ****     RCC->CFGR     &= ~(1<<6);
+ 133              		.loc 1 92 5 is_stmt 1 view .LVU50
+ 134              		.loc 1 92 8 is_stmt 0 view .LVU51
+ 135 0086 5A68     		ldr	r2, [r3, #4]
+ 136              		.loc 1 92 19 view .LVU52
+ 137 0088 22F04002 		bic	r2, r2, #64
+ARM GAS  /tmp/ccgfVqt0.s 			page 5
 
 
- 151 000a 034B     		ldr	r3, .L9
- 152 000c 5B68     		ldr	r3, [r3, #4]
- 153              		.loc 1 83 12 discriminator 1 view .LVU39
- 154 000e 13F0010F 		tst	r3, #1
- 155 0012 FAD1     		bne	.L8
-  84:Core/Src/CAN_Driver.c **** }
- 156              		.loc 1 84 1 view .LVU40
- 157 0014 7047     		bx	lr
- 158              	.L10:
- 159 0016 00BF     		.align	2
- 160              	.L9:
- 161 0018 00640040 		.word	1073767424
- 162              		.cfi_endproc
- 163              	.LFE67:
- 165              		.section	.text.CAN_TestMode,"ax",%progbits
- 166              		.align	1
- 167              		.global	CAN_TestMode
- 168              		.syntax unified
- 169              		.thumb
- 170              		.thumb_func
- 172              	CAN_TestMode:
- 173              	.LVL1:
- 174              	.LFB68:
-  85:Core/Src/CAN_Driver.c **** 
-  86:Core/Src/CAN_Driver.c **** 
-  87:Core/Src/CAN_Driver.c **** //SET THE TEST MODE
-  88:Core/Src/CAN_Driver.c **** void CAN_TestMode(unsigned int testmode){
- 175              		.loc 1 88 41 is_stmt 1 view -0
- 176              		.cfi_startproc
- 177              		@ args = 0, pretend = 0, frame = 0
- 178              		@ frame_needed = 0, uses_anonymous_args = 0
- 179              		@ link register save eliminated.
-  89:Core/Src/CAN_Driver.c ****     CAN1->BTR &= ~(CAN_BTR_SILM | CAN_BTR_LBKM);     // set testmode
- 180              		.loc 1 89 5 view .LVU42
- 181              		.loc 1 89 9 is_stmt 0 view .LVU43
- 182 0000 054B     		ldr	r3, .L12
- 183 0002 DA69     		ldr	r2, [r3, #28]
- 184              		.loc 1 89 15 view .LVU44
- 185 0004 22F04042 		bic	r2, r2, #-1073741824
- 186 0008 DA61     		str	r2, [r3, #28]
-  90:Core/Src/CAN_Driver.c ****     CAN1->BTR |=  (testmode & (CAN_BTR_SILM | CAN_BTR_LBKM));
- 187              		.loc 1 90 5 is_stmt 1 view .LVU45
- 188              		.loc 1 90 9 is_stmt 0 view .LVU46
- 189 000a DA69     		ldr	r2, [r3, #28]
- 190              		.loc 1 90 29 view .LVU47
- 191 000c 00F04040 		and	r0, r0, #-1073741824
- 192              	.LVL2:
- 193              		.loc 1 90 15 view .LVU48
- 194 0010 0243     		orrs	r2, r2, r0
- 195 0012 DA61     		str	r2, [r3, #28]
-  91:Core/Src/CAN_Driver.c **** }
- 196              		.loc 1 91 1 view .LVU49
- 197 0014 7047     		bx	lr
- 198              	.L13:
- 199 0016 00BF     		.align	2
- 200              	.L12:
- 201 0018 00640040 		.word	1073767424
-ARM GAS  /tmp/ccG9i6Tn.s 			page 6
+ 138 008c 5A60     		str	r2, [r3, #4]
+  93:Core/Src/CAN_Driver.c ****     RCC->CFGR     &= ~(1<<5);
+ 139              		.loc 1 93 5 is_stmt 1 view .LVU53
+ 140              		.loc 1 93 8 is_stmt 0 view .LVU54
+ 141 008e 5A68     		ldr	r2, [r3, #4]
+ 142              		.loc 1 93 19 view .LVU55
+ 143 0090 22F02002 		bic	r2, r2, #32
+ 144 0094 5A60     		str	r2, [r3, #4]
+  94:Core/Src/CAN_Driver.c ****     RCC->CFGR     &= ~(1<<4);
+ 145              		.loc 1 94 5 is_stmt 1 view .LVU56
+ 146              		.loc 1 94 8 is_stmt 0 view .LVU57
+ 147 0096 5A68     		ldr	r2, [r3, #4]
+ 148              		.loc 1 94 19 view .LVU58
+ 149 0098 22F01002 		bic	r2, r2, #16
+ 150 009c 5A60     		str	r2, [r3, #4]
+  95:Core/Src/CAN_Driver.c **** 
+  96:Core/Src/CAN_Driver.c **** 
+  97:Core/Src/CAN_Driver.c ****     RCC -> APB2ENR |= (1<<0);//w           //Alternate function enable
+ 151              		.loc 1 97 5 is_stmt 1 view .LVU59
+ 152              		.loc 1 97 9 is_stmt 0 view .LVU60
+ 153 009e 9A69     		ldr	r2, [r3, #24]
+ 154              		.loc 1 97 20 view .LVU61
+ 155 00a0 42F00102 		orr	r2, r2, #1
+ 156 00a4 9A61     		str	r2, [r3, #24]
+  98:Core/Src/CAN_Driver.c ****     RCC -> APB2ENR |= (1<<2);//w           //GPIOA clock enable
+ 157              		.loc 1 98 5 is_stmt 1 view .LVU62
+ 158              		.loc 1 98 9 is_stmt 0 view .LVU63
+ 159 00a6 9A69     		ldr	r2, [r3, #24]
+ 160              		.loc 1 98 20 view .LVU64
+ 161 00a8 42F00402 		orr	r2, r2, #4
+ 162 00ac 9A61     		str	r2, [r3, #24]
+  99:Core/Src/CAN_Driver.c ****     RCC -> APB1ENR |= (1<<25);//w          //CAN1 clock enable
+ 163              		.loc 1 99 5 is_stmt 1 view .LVU65
+ 164              		.loc 1 99 9 is_stmt 0 view .LVU66
+ 165 00ae DA69     		ldr	r2, [r3, #28]
+ 166              		.loc 1 99 20 view .LVU67
+ 167 00b0 42F00072 		orr	r2, r2, #33554432
+ 168 00b4 DA61     		str	r2, [r3, #28]
+ 100:Core/Src/CAN_Driver.c **** }
+ 169              		.loc 1 100 1 view .LVU68
+ 170 00b6 7047     		bx	lr
+ 171              	.L4:
+ 172              		.align	2
+ 173              	.L3:
+ 174 00b8 00100240 		.word	1073876992
+ 175              		.cfi_endproc
+ 176              	.LFE65:
+ 178              		.section	.text.TUFAN_CAN_Setup,"ax",%progbits
+ 179              		.align	1
+ 180              		.global	TUFAN_CAN_Setup
+ 181              		.syntax unified
+ 182              		.thumb
+ 183              		.thumb_func
+ 185              	TUFAN_CAN_Setup:
+ 186              	.LFB66:
+ 101:Core/Src/CAN_Driver.c **** 
+ 102:Core/Src/CAN_Driver.c **** void TUFAN_CAN_Setup(void){
+ARM GAS  /tmp/ccgfVqt0.s 			page 6
 
 
- 202              		.cfi_endproc
- 203              	.LFE68:
- 205              		.section	.text.CAN_WaitReady,"ax",%progbits
- 206              		.align	1
- 207              		.global	CAN_WaitReady
- 208              		.syntax unified
- 209              		.thumb
- 210              		.thumb_func
- 212              	CAN_WaitReady:
- 213              	.LFB69:
-  92:Core/Src/CAN_Driver.c **** 
-  93:Core/Src/CAN_Driver.c **** 
-  94:Core/Src/CAN_Driver.c **** //CHECK IF TRANSMIT MAILBOX IS EMPTY
-  95:Core/Src/CAN_Driver.c **** void CAN_WaitReady(void){
- 214              		.loc 1 95 25 is_stmt 1 view -0
- 215              		.cfi_startproc
- 216              		@ args = 0, pretend = 0, frame = 0
- 217              		@ frame_needed = 0, uses_anonymous_args = 0
- 218              		@ link register save eliminated.
- 219              	.L15:
-  96:Core/Src/CAN_Driver.c ****     while((CAN1 -> TSR & (1<<26)) == 0); //TRANSMIT MAILBOX 0 IS EMPTY
- 220              		.loc 1 96 35 discriminator 1 view .LVU51
- 221              		.loc 1 96 17 is_stmt 0 discriminator 1 view .LVU52
- 222 0000 044B     		ldr	r3, .L16
- 223 0002 9B68     		ldr	r3, [r3, #8]
- 224              		.loc 1 96 35 discriminator 1 view .LVU53
- 225 0004 13F0806F 		tst	r3, #67108864
- 226 0008 FAD0     		beq	.L15
-  97:Core/Src/CAN_Driver.c ****     CAN_TxRdy = 1;
- 227              		.loc 1 97 5 is_stmt 1 view .LVU54
- 228              		.loc 1 97 15 is_stmt 0 view .LVU55
- 229 000a 034B     		ldr	r3, .L16+4
- 230 000c 0122     		movs	r2, #1
- 231 000e 1A60     		str	r2, [r3]
-  98:Core/Src/CAN_Driver.c **** }
- 232              		.loc 1 98 1 view .LVU56
- 233 0010 7047     		bx	lr
- 234              	.L17:
- 235 0012 00BF     		.align	2
- 236              	.L16:
- 237 0014 00640040 		.word	1073767424
- 238 0018 00000000 		.word	CAN_TxRdy
- 239              		.cfi_endproc
- 240              	.LFE69:
- 242              		.section	.text.CAN_WriteMessage,"ax",%progbits
- 243              		.align	1
- 244              		.global	CAN_WriteMessage
- 245              		.syntax unified
- 246              		.thumb
- 247              		.thumb_func
- 249              	CAN_WriteMessage:
- 250              	.LVL3:
- 251              	.LFB70:
-  99:Core/Src/CAN_Driver.c **** 
- 100:Core/Src/CAN_Driver.c **** 
- 101:Core/Src/CAN_Driver.c **** // WRITE A MESSAGE TO CAN PERHIPERAL AND TRANSMIT IT
- 102:Core/Src/CAN_Driver.c **** void CAN_WriteMessage(CAN_Msg *msg){
-ARM GAS  /tmp/ccG9i6Tn.s 			page 7
+ 187              		.loc 1 102 27 is_stmt 1 view -0
+ 188              		.cfi_startproc
+ 189              		@ args = 0, pretend = 0, frame = 0
+ 190              		@ frame_needed = 0, uses_anonymous_args = 0
+ 191              		@ link register save eliminated.
+ 103:Core/Src/CAN_Driver.c ****     NVIC->ISER[0] |= (1<< (USB_HP_CAN1_TX_IRQn & 0x1F));
+ 192              		.loc 1 103 5 view .LVU70
+ 193              		.loc 1 103 15 is_stmt 0 view .LVU71
+ 194 0000 144B     		ldr	r3, .L7
+ 195 0002 1A68     		ldr	r2, [r3]
+ 196              		.loc 1 103 19 view .LVU72
+ 197 0004 42F40022 		orr	r2, r2, #524288
+ 198 0008 1A60     		str	r2, [r3]
+ 104:Core/Src/CAN_Driver.c ****     NVIC->ISER[0] |= (1<< (USB_LP_CAN1_RX0_IRQn & 0x1F));
+ 199              		.loc 1 104 5 is_stmt 1 view .LVU73
+ 200              		.loc 1 104 15 is_stmt 0 view .LVU74
+ 201 000a 1A68     		ldr	r2, [r3]
+ 202              		.loc 1 104 19 view .LVU75
+ 203 000c 42F48012 		orr	r2, r2, #1048576
+ 204 0010 1A60     		str	r2, [r3]
+ 105:Core/Src/CAN_Driver.c **** 
+ 106:Core/Src/CAN_Driver.c ****     //Initialization Request
+ 107:Core/Src/CAN_Driver.c ****     CAN1->MCR |= (1<<0);
+ 205              		.loc 1 107 5 is_stmt 1 view .LVU76
+ 206              		.loc 1 107 9 is_stmt 0 view .LVU77
+ 207 0012 114A     		ldr	r2, .L7+4
+ 208 0014 1368     		ldr	r3, [r2]
+ 209              		.loc 1 107 15 view .LVU78
+ 210 0016 43F00103 		orr	r3, r3, #1
+ 211 001a 1360     		str	r3, [r2]
+ 108:Core/Src/CAN_Driver.c ****     while(!(CAN1->MCR & (1<<0)));
+ 212              		.loc 1 108 5 is_stmt 1 view .LVU79
+ 213              	.L6:
+ 214              		.loc 1 108 11 discriminator 1 view .LVU80
+ 215              		.loc 1 108 17 is_stmt 0 discriminator 1 view .LVU81
+ 216 001c 0E4B     		ldr	r3, .L7+4
+ 217 001e 1B68     		ldr	r3, [r3]
+ 218              		.loc 1 108 11 discriminator 1 view .LVU82
+ 219 0020 13F0010F 		tst	r3, #1
+ 220 0024 FAD0     		beq	.L6
+ 109:Core/Src/CAN_Driver.c **** 
+ 110:Core/Src/CAN_Driver.c ****     
+ 111:Core/Src/CAN_Driver.c ****     // No automatic retransmission
+ 112:Core/Src/CAN_Driver.c ****     CAN1->MCR |= (1<<4);
+ 221              		.loc 1 112 5 is_stmt 1 view .LVU83
+ 222              		.loc 1 112 9 is_stmt 0 view .LVU84
+ 223 0026 0C4B     		ldr	r3, .L7+4
+ 224 0028 1A68     		ldr	r2, [r3]
+ 225              		.loc 1 112 15 view .LVU85
+ 226 002a 42F01002 		orr	r2, r2, #16
+ 227 002e 1A60     		str	r2, [r3]
+ 113:Core/Src/CAN_Driver.c ****     
+ 114:Core/Src/CAN_Driver.c ****     // Auto retransmit
+ 115:Core/Src/CAN_Driver.c ****     //CAN1 -> MCR &= ~(1<<4);
+ 116:Core/Src/CAN_Driver.c ****     
+ 117:Core/Src/CAN_Driver.c **** 
+ 118:Core/Src/CAN_Driver.c ****     
+ARM GAS  /tmp/ccgfVqt0.s 			page 7
 
 
- 252              		.loc 1 102 36 is_stmt 1 view -0
- 253              		.cfi_startproc
- 254              		@ args = 0, pretend = 0, frame = 0
- 255              		@ frame_needed = 0, uses_anonymous_args = 0
- 256              		@ link register save eliminated.
- 103:Core/Src/CAN_Driver.c ****     CAN1->sTxMailBox[0].TIR = (unsigned int)0; // reset TIR register
- 257              		.loc 1 103 5 view .LVU58
- 258              		.loc 1 103 29 is_stmt 0 view .LVU59
- 259 0000 2D4B     		ldr	r3, .L23
- 260 0002 0022     		movs	r2, #0
- 261 0004 C3F88021 		str	r2, [r3, #384]
- 104:Core/Src/CAN_Driver.c **** 
- 105:Core/Src/CAN_Driver.c ****     if(msg->format == STANDARD_FORMAT) // Setup identifier information, standard ID
- 262              		.loc 1 105 5 is_stmt 1 view .LVU60
- 263              		.loc 1 105 11 is_stmt 0 view .LVU61
- 264 0008 437B     		ldrb	r3, [r0, #13]	@ zero_extendqisi2
- 265              		.loc 1 105 7 view .LVU62
- 266 000a 002B     		cmp	r3, #0
- 267 000c 41D1     		bne	.L19
- 106:Core/Src/CAN_Driver.c ****         CAN1 -> sTxMailBox[0].TIR |= (unsigned int)(msg->id << 21) | (0x00000000U);
- 268              		.loc 1 106 9 is_stmt 1 view .LVU63
- 269              		.loc 1 106 30 is_stmt 0 view .LVU64
- 270 000e 2A4A     		ldr	r2, .L23
- 271 0010 D2F88031 		ldr	r3, [r2, #384]
- 272              		.loc 1 106 56 view .LVU65
- 273 0014 0168     		ldr	r1, [r0]
- 274              		.loc 1 106 35 view .LVU66
- 275 0016 43EA4153 		orr	r3, r3, r1, lsl #21
- 276 001a C2F88031 		str	r3, [r2, #384]
- 277              	.L20:
- 107:Core/Src/CAN_Driver.c ****     else // extended ID
- 108:Core/Src/CAN_Driver.c ****         CAN1 -> sTxMailBox[0].TIR |= (unsigned int)(msg->id << 3) | (0x00000004U);
- 109:Core/Src/CAN_Driver.c ****     // Setup type information
- 110:Core/Src/CAN_Driver.c ****     if(msg->type == DATA_FRAME) // Data frame
- 278              		.loc 1 110 5 is_stmt 1 view .LVU67
- 279              		.loc 1 110 11 is_stmt 0 view .LVU68
- 280 001e 837B     		ldrb	r3, [r0, #14]	@ zero_extendqisi2
- 281              		.loc 1 110 7 view .LVU69
- 282 0020 002B     		cmp	r3, #0
- 283 0022 41D1     		bne	.L21
- 111:Core/Src/CAN_Driver.c ****         CAN1 -> sTxMailBox[0].TIR |= (0x00000000U);
- 284              		.loc 1 111 9 is_stmt 1 view .LVU70
- 285              		.loc 1 111 30 is_stmt 0 view .LVU71
- 286 0024 244B     		ldr	r3, .L23
- 287 0026 D3F88021 		ldr	r2, [r3, #384]
- 288              		.loc 1 111 35 view .LVU72
- 289 002a C3F88021 		str	r2, [r3, #384]
- 290              	.L22:
- 112:Core/Src/CAN_Driver.c ****     else    //remote frame
- 113:Core/Src/CAN_Driver.c ****         CAN1 -> sTxMailBox[0].TIR |= (0x00000002U);
- 114:Core/Src/CAN_Driver.c **** 
- 115:Core/Src/CAN_Driver.c ****     // Setup data bytes
- 116:Core/Src/CAN_Driver.c ****     CAN1->sTxMailBox[0].TDLR = (((unsigned int)msg->data[3] << 24) | 
- 291              		.loc 1 116 5 is_stmt 1 view .LVU73
- 292              		.loc 1 116 57 is_stmt 0 view .LVU74
- 293 002e C379     		ldrb	r3, [r0, #7]	@ zero_extendqisi2
- 117:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[2] << 16) |
-ARM GAS  /tmp/ccG9i6Tn.s 			page 8
+ 119:Core/Src/CAN_Driver.c ****     //FIFO message pending interrupt enable
+ 120:Core/Src/CAN_Driver.c ****     CAN1->IER |= (1<<0);
+ 228              		.loc 1 120 5 is_stmt 1 view .LVU86
+ 229              		.loc 1 120 9 is_stmt 0 view .LVU87
+ 230 0030 5A69     		ldr	r2, [r3, #20]
+ 231              		.loc 1 120 15 view .LVU88
+ 232 0032 42F00102 		orr	r2, r2, #1
+ 233 0036 5A61     		str	r2, [r3, #20]
+ 121:Core/Src/CAN_Driver.c ****     //Transmit mailbox empty interrupt enable
+ 122:Core/Src/CAN_Driver.c ****     CAN1->IER |= (1<<1);
+ 234              		.loc 1 122 5 is_stmt 1 view .LVU89
+ 235              		.loc 1 122 9 is_stmt 0 view .LVU90
+ 236 0038 5A69     		ldr	r2, [r3, #20]
+ 237              		.loc 1 122 15 view .LVU91
+ 238 003a 42F00202 		orr	r2, r2, #2
+ 239 003e 5A61     		str	r2, [r3, #20]
+ 123:Core/Src/CAN_Driver.c ****     
+ 124:Core/Src/CAN_Driver.c ****     //CAN1->BTR reset value=0x0123 0000 -> 0x0000 0000
+ 125:Core/Src/CAN_Driver.c ****     
+ 126:Core/Src/CAN_Driver.c ****     CAN1->BTR &= ~(((        0x03) << 24) | ((        0x07) << 20) | ((         0x0F) << 16) | (   
+ 240              		.loc 1 126 5 is_stmt 1 view .LVU92
+ 241              		.loc 1 126 9 is_stmt 0 view .LVU93
+ 242 0040 D969     		ldr	r1, [r3, #28]
+ 243              		.loc 1 126 15 view .LVU94
+ 244 0042 064A     		ldr	r2, .L7+8
+ 245 0044 0A40     		ands	r2, r2, r1
+ 246 0046 DA61     		str	r2, [r3, #28]
+ 127:Core/Src/CAN_Driver.c ****     
+ 128:Core/Src/CAN_Driver.c ****     
+ 129:Core/Src/CAN_Driver.c ****     //SJW -> 3, TS2 -> 4, TS1 -> 1, BRP -> 3 
+ 130:Core/Src/CAN_Driver.c ****     
+ 131:Core/Src/CAN_Driver.c **** 
+ 132:Core/Src/CAN_Driver.c ****     CAN1->BTR |=  ((3 << 24) | (4 << 20) | (1 << 16) | (3 & 0x1FF));
+ 247              		.loc 1 132 5 is_stmt 1 view .LVU95
+ 248              		.loc 1 132 9 is_stmt 0 view .LVU96
+ 249 0048 D969     		ldr	r1, [r3, #28]
+ 250              		.loc 1 132 15 view .LVU97
+ 251 004a 054A     		ldr	r2, .L7+12
+ 252 004c 0A43     		orrs	r2, r2, r1
+ 253 004e DA61     		str	r2, [r3, #28]
+ 133:Core/Src/CAN_Driver.c ****     
+ 134:Core/Src/CAN_Driver.c ****     
+ 135:Core/Src/CAN_Driver.c ****     }
+ 254              		.loc 1 135 5 view .LVU98
+ 255 0050 7047     		bx	lr
+ 256              	.L8:
+ 257 0052 00BF     		.align	2
+ 258              	.L7:
+ 259 0054 00E100E0 		.word	-536813312
+ 260 0058 00640040 		.word	1073767424
+ 261 005c 00FE80FC 		.word	-58655232
+ 262 0060 03004103 		.word	54591491
+ 263              		.cfi_endproc
+ 264              	.LFE66:
+ 266              		.section	.text.TUFAN_CAN_Start,"ax",%progbits
+ 267              		.align	1
+ 268              		.global	TUFAN_CAN_Start
+ARM GAS  /tmp/ccgfVqt0.s 			page 8
 
 
- 294              		.loc 1 117 57 view .LVU75
- 295 0030 8279     		ldrb	r2, [r0, #6]	@ zero_extendqisi2
- 296              		.loc 1 117 61 view .LVU76
- 297 0032 1204     		lsls	r2, r2, #16
- 116:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[2] << 16) |
- 298              		.loc 1 116 68 view .LVU77
- 299 0034 42EA0362 		orr	r2, r2, r3, lsl #24
- 118:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[1] <<  8) | 
- 300              		.loc 1 118 57 view .LVU78
- 301 0038 4379     		ldrb	r3, [r0, #5]	@ zero_extendqisi2
- 117:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[2] << 16) |
- 302              		.loc 1 117 68 view .LVU79
- 303 003a 42EA0322 		orr	r2, r2, r3, lsl #8
- 119:Core/Src/CAN_Driver.c ****                               
- 120:Core/Src/CAN_Driver.c ****   ((unsigned int)msg->data[0]));
- 304              		.loc 1 120 27 view .LVU80
- 305 003e 0379     		ldrb	r3, [r0, #4]	@ zero_extendqisi2
- 118:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[1] <<  8) | 
- 306              		.loc 1 118 68 view .LVU81
- 307 0040 1A43     		orrs	r2, r2, r3
- 116:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[2] << 16) |
- 308              		.loc 1 116 30 view .LVU82
- 309 0042 1D4B     		ldr	r3, .L23
- 310 0044 C3F88821 		str	r2, [r3, #392]
- 121:Core/Src/CAN_Driver.c ****     CAN1->sTxMailBox[0].TDHR = (((unsigned int)msg->data[7] << 24) | 
- 311              		.loc 1 121 5 is_stmt 1 view .LVU83
- 312              		.loc 1 121 57 is_stmt 0 view .LVU84
- 313 0048 C17A     		ldrb	r1, [r0, #11]	@ zero_extendqisi2
- 122:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[6] << 16) |
- 314              		.loc 1 122 57 view .LVU85
- 315 004a 827A     		ldrb	r2, [r0, #10]	@ zero_extendqisi2
- 316              		.loc 1 122 61 view .LVU86
- 317 004c 1204     		lsls	r2, r2, #16
- 121:Core/Src/CAN_Driver.c ****     CAN1->sTxMailBox[0].TDHR = (((unsigned int)msg->data[7] << 24) | 
- 318              		.loc 1 121 68 view .LVU87
- 319 004e 42EA0162 		orr	r2, r2, r1, lsl #24
- 123:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[5] <<  8) |
- 320              		.loc 1 123 57 view .LVU88
- 321 0052 417A     		ldrb	r1, [r0, #9]	@ zero_extendqisi2
- 122:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[6] << 16) |
- 322              		.loc 1 122 68 view .LVU89
- 323 0054 42EA0122 		orr	r2, r2, r1, lsl #8
- 124:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[4]));
- 324              		.loc 1 124 57 view .LVU90
- 325 0058 017A     		ldrb	r1, [r0, #8]	@ zero_extendqisi2
- 123:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[5] <<  8) |
- 326              		.loc 1 123 68 view .LVU91
- 327 005a 0A43     		orrs	r2, r2, r1
- 121:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[6] << 16) |
- 328              		.loc 1 121 30 view .LVU92
- 329 005c C3F88C21 		str	r2, [r3, #396]
- 125:Core/Src/CAN_Driver.c **** 
- 126:Core/Src/CAN_Driver.c ****     //SETUP LENGTH
- 127:Core/Src/CAN_Driver.c ****     CAN1 -> sTxMailBox[0].TDTR &= ~(0xFUL << (0U));
- 330              		.loc 1 127 5 is_stmt 1 view .LVU93
- 331              		.loc 1 127 26 is_stmt 0 view .LVU94
- 332 0060 D3F88421 		ldr	r2, [r3, #388]
-ARM GAS  /tmp/ccG9i6Tn.s 			page 9
-
-
- 333              		.loc 1 127 32 view .LVU95
- 334 0064 22F00F02 		bic	r2, r2, #15
- 335 0068 C3F88421 		str	r2, [r3, #388]
- 128:Core/Src/CAN_Driver.c ****     CAN1 -> sTxMailBox[0].TDTR |= (msg->len & (0xFUL << (0U)));
- 336              		.loc 1 128 5 is_stmt 1 view .LVU96
- 337              		.loc 1 128 26 is_stmt 0 view .LVU97
- 338 006c D3F88421 		ldr	r2, [r3, #388]
- 339              		.loc 1 128 39 view .LVU98
- 340 0070 017B     		ldrb	r1, [r0, #12]	@ zero_extendqisi2
- 341              		.loc 1 128 45 view .LVU99
- 342 0072 01F00F01 		and	r1, r1, #15
- 343              		.loc 1 128 32 view .LVU100
- 344 0076 0A43     		orrs	r2, r2, r1
- 345 0078 C3F88421 		str	r2, [r3, #388]
- 129:Core/Src/CAN_Driver.c **** 
- 130:Core/Src/CAN_Driver.c ****     CAN1 -> IER |= CAN_IER_TMEIE;                   // Enable TME interrup
- 346              		.loc 1 130 5 is_stmt 1 view .LVU101
- 347              		.loc 1 130 10 is_stmt 0 view .LVU102
- 348 007c 5A69     		ldr	r2, [r3, #20]
- 349              		.loc 1 130 17 view .LVU103
- 350 007e 42F00102 		orr	r2, r2, #1
- 351 0082 5A61     		str	r2, [r3, #20]
- 131:Core/Src/CAN_Driver.c ****     CAN1 -> sTxMailBox[0].TIR |= CAN_TI0R_TXRQ;     // Transmit message
- 352              		.loc 1 131 5 is_stmt 1 view .LVU104
- 353              		.loc 1 131 26 is_stmt 0 view .LVU105
- 354 0084 D3F88021 		ldr	r2, [r3, #384]
- 355              		.loc 1 131 31 view .LVU106
- 356 0088 42F00102 		orr	r2, r2, #1
- 357 008c C3F88021 		str	r2, [r3, #384]
- 132:Core/Src/CAN_Driver.c **** }
- 358              		.loc 1 132 1 view .LVU107
- 359 0090 7047     		bx	lr
- 360              	.L19:
- 108:Core/Src/CAN_Driver.c ****     // Setup type information
- 361              		.loc 1 108 9 is_stmt 1 view .LVU108
- 108:Core/Src/CAN_Driver.c ****     // Setup type information
- 362              		.loc 1 108 30 is_stmt 0 view .LVU109
- 363 0092 094A     		ldr	r2, .L23
- 364 0094 D2F88031 		ldr	r3, [r2, #384]
- 108:Core/Src/CAN_Driver.c ****     // Setup type information
- 365              		.loc 1 108 56 view .LVU110
- 366 0098 0168     		ldr	r1, [r0]
- 108:Core/Src/CAN_Driver.c ****     // Setup type information
- 367              		.loc 1 108 35 view .LVU111
- 368 009a 43EAC103 		orr	r3, r3, r1, lsl #3
- 369 009e 43F00403 		orr	r3, r3, #4
- 370 00a2 C2F88031 		str	r3, [r2, #384]
- 371 00a6 BAE7     		b	.L20
- 372              	.L21:
- 113:Core/Src/CAN_Driver.c **** 
- 373              		.loc 1 113 9 is_stmt 1 view .LVU112
- 113:Core/Src/CAN_Driver.c **** 
- 374              		.loc 1 113 30 is_stmt 0 view .LVU113
- 375 00a8 034A     		ldr	r2, .L23
- 376 00aa D2F88031 		ldr	r3, [r2, #384]
- 113:Core/Src/CAN_Driver.c **** 
- 377              		.loc 1 113 35 view .LVU114
-ARM GAS  /tmp/ccG9i6Tn.s 			page 10
-
-
- 378 00ae 43F00203 		orr	r3, r3, #2
- 379 00b2 C2F88031 		str	r3, [r2, #384]
- 380 00b6 BAE7     		b	.L22
- 381              	.L24:
- 382              		.align	2
- 383              	.L23:
- 384 00b8 00640040 		.word	1073767424
- 385              		.cfi_endproc
- 386              	.LFE70:
- 388              		.section	.text.CAN_ReadMessage,"ax",%progbits
- 389              		.align	1
- 390              		.global	CAN_ReadMessage
- 391              		.syntax unified
- 392              		.thumb
- 393              		.thumb_func
- 395              	CAN_ReadMessage:
- 396              	.LVL4:
- 397              	.LFB71:
- 133:Core/Src/CAN_Driver.c **** 
- 134:Core/Src/CAN_Driver.c **** void CAN_ReadMessage(CAN_Msg *msg){
- 398              		.loc 1 134 35 is_stmt 1 view -0
- 399              		.cfi_startproc
- 400              		@ args = 0, pretend = 0, frame = 0
- 401              		@ frame_needed = 0, uses_anonymous_args = 0
- 402              		@ link register save eliminated.
- 135:Core/Src/CAN_Driver.c ****     //TODO
- 136:Core/Src/CAN_Driver.c **** }
- 403              		.loc 1 136 1 view .LVU116
- 404 0000 7047     		bx	lr
- 405              		.cfi_endproc
- 406              	.LFE71:
- 408              		.section	.text.CAN_SetFilter,"ax",%progbits
- 409              		.align	1
- 410              		.global	CAN_SetFilter
- 411              		.syntax unified
- 412              		.thumb
- 413              		.thumb_func
- 415              	CAN_SetFilter:
- 416              	.LVL5:
- 417              	.LFB72:
+ 269              		.syntax unified
+ 270              		.thumb
+ 271              		.thumb_func
+ 273              	TUFAN_CAN_Start:
+ 274              	.LFB67:
+ 136:Core/Src/CAN_Driver.c **** 
  137:Core/Src/CAN_Driver.c **** 
- 138:Core/Src/CAN_Driver.c **** 
- 139:Core/Src/CAN_Driver.c **** void CAN_SetFilter(unsigned int id, unsigned char format){
- 418              		.loc 1 139 58 view -0
- 419              		.cfi_startproc
- 420              		@ args = 0, pretend = 0, frame = 0
- 421              		@ frame_needed = 0, uses_anonymous_args = 0
- 422              		@ link register save eliminated.
- 140:Core/Src/CAN_Driver.c ****     static unsigned short CAN_FilterId = 0;
- 423              		.loc 1 140 5 view .LVU118
- 141:Core/Src/CAN_Driver.c ****     unsigned int CAN_MsgId             = 0;
- 424              		.loc 1 141 5 view .LVU119
- 142:Core/Src/CAN_Driver.c **** 
- 143:Core/Src/CAN_Driver.c ****     if (CAN_FilterId > 13) {
- 425              		.loc 1 143 5 view .LVU120
- 426              		.loc 1 143 22 is_stmt 0 view .LVU121
- 427 0000 214B     		ldr	r3, .L30
-ARM GAS  /tmp/ccG9i6Tn.s 			page 11
+ 138:Core/Src/CAN_Driver.c **** //LEAVE INITIALIZATION MODE 
+ 139:Core/Src/CAN_Driver.c **** void TUFAN_CAN_Start(void){
+ 275              		.loc 1 139 27 is_stmt 1 view -0
+ 276              		.cfi_startproc
+ 277              		@ args = 0, pretend = 0, frame = 0
+ 278              		@ frame_needed = 0, uses_anonymous_args = 0
+ 279              		@ link register save eliminated.
+ 140:Core/Src/CAN_Driver.c ****     //Normal operating mode , reset INRQ 
+ 141:Core/Src/CAN_Driver.c ****     CAN1->MCR &= ~(1<<0);
+ 280              		.loc 1 141 5 view .LVU100
+ 281              		.loc 1 141 9 is_stmt 0 view .LVU101
+ 282 0000 054A     		ldr	r2, .L11
+ 283 0002 1368     		ldr	r3, [r2]
+ 284              		.loc 1 141 15 view .LVU102
+ 285 0004 23F00103 		bic	r3, r3, #1
+ 286 0008 1360     		str	r3, [r2]
+ 142:Core/Src/CAN_Driver.c ****     while (CAN1->MSR & (1<<0));
+ 287              		.loc 1 142 5 is_stmt 1 view .LVU103
+ 288              	.L10:
+ 289              		.loc 1 142 12 discriminator 1 view .LVU104
+ 290              		.loc 1 142 16 is_stmt 0 discriminator 1 view .LVU105
+ 291 000a 034B     		ldr	r3, .L11
+ 292 000c 5B68     		ldr	r3, [r3, #4]
+ 293              		.loc 1 142 12 discriminator 1 view .LVU106
+ 294 000e 13F0010F 		tst	r3, #1
+ 295 0012 FAD1     		bne	.L10
+ 143:Core/Src/CAN_Driver.c **** }
+ 296              		.loc 1 143 1 view .LVU107
+ 297 0014 7047     		bx	lr
+ 298              	.L12:
+ 299 0016 00BF     		.align	2
+ 300              	.L11:
+ 301 0018 00640040 		.word	1073767424
+ 302              		.cfi_endproc
+ 303              	.LFE67:
+ 305              		.section	.text.TUFAN_CAN_TestMode,"ax",%progbits
+ 306              		.align	1
+ 307              		.global	TUFAN_CAN_TestMode
+ 308              		.syntax unified
+ 309              		.thumb
+ 310              		.thumb_func
+ 312              	TUFAN_CAN_TestMode:
+ 313              	.LVL0:
+ 314              	.LFB68:
+ 144:Core/Src/CAN_Driver.c **** 
+ 145:Core/Src/CAN_Driver.c **** 
+ 146:Core/Src/CAN_Driver.c **** //SET THE TEST MODE
+ 147:Core/Src/CAN_Driver.c **** 
+ 148:Core/Src/CAN_Driver.c **** void TUFAN_CAN_TestMode(unsigned int testmode){
+ 315              		.loc 1 148 47 is_stmt 1 view -0
+ARM GAS  /tmp/ccgfVqt0.s 			page 9
 
 
- 428 0002 B3F800C0 		ldrh	ip, [r3]
- 429              		.loc 1 143 8 view .LVU122
- 430 0006 BCF10D0F 		cmp	ip, #13
- 431 000a 37D8     		bhi	.L26
- 144:Core/Src/CAN_Driver.c ****         return;
- 145:Core/Src/CAN_Driver.c ****     }
- 146:Core/Src/CAN_Driver.c **** 
- 147:Core/Src/CAN_Driver.c ****     if (format == 0){
- 432              		.loc 1 147 5 is_stmt 1 view .LVU123
- 433              		.loc 1 147 8 is_stmt 0 view .LVU124
- 434 000c B9BB     		cbnz	r1, .L28
- 148:Core/Src/CAN_Driver.c ****         CAN_MsgId |= (unsigned int)(id<<21) | (0x00000000U);
- 435              		.loc 1 148 9 is_stmt 1 view .LVU125
- 436              		.loc 1 148 45 is_stmt 0 view .LVU126
- 437 000e 4005     		lsls	r0, r0, #21
- 438              	.LVL6:
- 439              	.L29:
- 149:Core/Src/CAN_Driver.c ****     }
- 150:Core/Src/CAN_Driver.c ****     else {
- 151:Core/Src/CAN_Driver.c ****         CAN_MsgId |= (unsigned int)(id<<3) | (0x00000004U)
- 152:Core/Src/CAN_Driver.c **** ;
- 153:Core/Src/CAN_Driver.c ****     }
- 154:Core/Src/CAN_Driver.c ****     //SET INITIALIZATION MODE FOR FILTER BANKS
- 155:Core/Src/CAN_Driver.c ****     CAN1->FMR |= (1<<0); 
- 440              		.loc 1 155 5 is_stmt 1 view .LVU127
- 441              		.loc 1 155 9 is_stmt 0 view .LVU128
- 442 0010 1E4B     		ldr	r3, .L30+4
- 443 0012 D3F80022 		ldr	r2, [r3, #512]
- 444              		.loc 1 155 15 view .LVU129
- 445 0016 42F00102 		orr	r2, r2, #1
- 446 001a C3F80022 		str	r2, [r3, #512]
- 156:Core/Src/CAN_Driver.c ****     //DEACTIVE FILTER
- 157:Core/Src/CAN_Driver.c ****     CAN1->FA1R &= ~(unsigned int)(1 << CAN_FilterId);//deactive filter 
- 447              		.loc 1 157 5 is_stmt 1 view .LVU130
- 448              		.loc 1 157 9 is_stmt 0 view .LVU131
- 449 001e D3F81C12 		ldr	r1, [r3, #540]
- 450              	.LVL7:
- 451              		.loc 1 157 37 view .LVU132
- 452 0022 0122     		movs	r2, #1
- 453 0024 02FA0CF2 		lsl	r2, r2, ip
- 454              		.loc 1 157 16 view .LVU133
- 455 0028 21EA0201 		bic	r1, r1, r2
- 456 002c C3F81C12 		str	r1, [r3, #540]
- 158:Core/Src/CAN_Driver.c **** 
- 159:Core/Src/CAN_Driver.c ****     //INITIALIZE FILTER
- 160:Core/Src/CAN_Driver.c ****     //SET 32-BIT SCALE CONFIg
- 161:Core/Src/CAN_Driver.c ****     CAN1 -> FS1R |= (unsigned int)(1 << CAN_FilterId);
- 457              		.loc 1 161 5 is_stmt 1 view .LVU134
- 458              		.loc 1 161 10 is_stmt 0 view .LVU135
- 459 0030 D3F80C12 		ldr	r1, [r3, #524]
- 460              		.loc 1 161 18 view .LVU136
- 461 0034 1143     		orrs	r1, r1, r2
- 462 0036 C3F80C12 		str	r1, [r3, #524]
- 162:Core/Src/CAN_Driver.c ****     //SET 2 32-bit idenfitier list mode
- 163:Core/Src/CAN_Driver.c ****     CAN1 -> FM1R |= (unsigned int)(1 << CAN_FilterId);
- 463              		.loc 1 163 5 is_stmt 1 view .LVU137
- 464              		.loc 1 163 10 is_stmt 0 view .LVU138
-ARM GAS  /tmp/ccG9i6Tn.s 			page 12
+ 316              		.cfi_startproc
+ 317              		@ args = 0, pretend = 0, frame = 0
+ 318              		@ frame_needed = 0, uses_anonymous_args = 0
+ 319              		@ link register save eliminated.
+ 149:Core/Src/CAN_Driver.c ****     CAN1->BTR |= (1<<30);   //Enable loopback mode
+ 320              		.loc 1 149 5 view .LVU109
+ 321              		.loc 1 149 9 is_stmt 0 view .LVU110
+ 322 0000 024A     		ldr	r2, .L14
+ 323 0002 D369     		ldr	r3, [r2, #28]
+ 324              		.loc 1 149 15 view .LVU111
+ 325 0004 43F08043 		orr	r3, r3, #1073741824
+ 326 0008 D361     		str	r3, [r2, #28]
+ 150:Core/Src/CAN_Driver.c **** }
+ 327              		.loc 1 150 1 view .LVU112
+ 328 000a 7047     		bx	lr
+ 329              	.L15:
+ 330              		.align	2
+ 331              	.L14:
+ 332 000c 00640040 		.word	1073767424
+ 333              		.cfi_endproc
+ 334              	.LFE68:
+ 336              		.section	.text.TUFAN_CAN_WaitReady,"ax",%progbits
+ 337              		.align	1
+ 338              		.global	TUFAN_CAN_WaitReady
+ 339              		.syntax unified
+ 340              		.thumb
+ 341              		.thumb_func
+ 343              	TUFAN_CAN_WaitReady:
+ 344              	.LFB69:
+ 151:Core/Src/CAN_Driver.c **** 
+ 152:Core/Src/CAN_Driver.c **** 
+ 153:Core/Src/CAN_Driver.c **** 
+ 154:Core/Src/CAN_Driver.c **** //CHECK IF TRANSMIT MAILBOX IS EMPTY
+ 155:Core/Src/CAN_Driver.c **** void TUFAN_CAN_WaitReady(void){
+ 345              		.loc 1 155 31 is_stmt 1 view -0
+ 346              		.cfi_startproc
+ 347              		@ args = 0, pretend = 0, frame = 0
+ 348              		@ frame_needed = 0, uses_anonymous_args = 0
+ 349              		@ link register save eliminated.
+ 350              	.L17:
+ 156:Core/Src/CAN_Driver.c ****     while((CAN1->TSR & (1<<26)) == 0); //TRANSMIT MAILBOX 0 IS EMPTY
+ 351              		.loc 1 156 33 discriminator 1 view .LVU114
+ 352              		.loc 1 156 16 is_stmt 0 discriminator 1 view .LVU115
+ 353 0000 044B     		ldr	r3, .L18
+ 354 0002 9B68     		ldr	r3, [r3, #8]
+ 355              		.loc 1 156 33 discriminator 1 view .LVU116
+ 356 0004 13F0806F 		tst	r3, #67108864
+ 357 0008 FAD0     		beq	.L17
+ 157:Core/Src/CAN_Driver.c ****     CAN_TxRdy = 1;
+ 358              		.loc 1 157 5 is_stmt 1 view .LVU117
+ 359              		.loc 1 157 15 is_stmt 0 view .LVU118
+ 360 000a 034B     		ldr	r3, .L18+4
+ 361 000c 0122     		movs	r2, #1
+ 362 000e 1A60     		str	r2, [r3]
+ 158:Core/Src/CAN_Driver.c **** }
+ 363              		.loc 1 158 1 view .LVU119
+ 364 0010 7047     		bx	lr
+ARM GAS  /tmp/ccgfVqt0.s 			page 10
 
 
- 465 003a D3F80412 		ldr	r1, [r3, #516]
- 466              		.loc 1 163 18 view .LVU139
- 467 003e 1143     		orrs	r1, r1, r2
- 468 0040 C3F80412 		str	r1, [r3, #516]
- 164:Core/Src/CAN_Driver.c ****     
- 165:Core/Src/CAN_Driver.c ****     //32-bit identifier
- 166:Core/Src/CAN_Driver.c ****     CAN1->sFilterRegister[CAN_FilterId].FR1 = CAN_MsgId;
- 469              		.loc 1 166 5 is_stmt 1 view .LVU140
- 470              		.loc 1 166 45 is_stmt 0 view .LVU141
- 471 0044 0CF14801 		add	r1, ip, #72
- 472 0048 43F83100 		str	r0, [r3, r1, lsl #3]
- 167:Core/Src/CAN_Driver.c ****     //32-bit identifier
- 168:Core/Src/CAN_Driver.c ****     CAN1->sFilterRegister[CAN_FilterId].FR2 = CAN_MsgId;
- 473              		.loc 1 168 5 is_stmt 1 view .LVU142
- 474              		.loc 1 168 45 is_stmt 0 view .LVU143
- 475 004c 03EBC101 		add	r1, r3, r1, lsl #3
- 476 0050 4860     		str	r0, [r1, #4]
- 169:Core/Src/CAN_Driver.c **** 
- 170:Core/Src/CAN_Driver.c ****     //assign filter to FIFO 0
- 171:Core/Src/CAN_Driver.c ****     CAN1->FFA1R &= ~(unsigned int)(1 << CAN_FilterId);
- 477              		.loc 1 171 5 is_stmt 1 view .LVU144
- 478              		.loc 1 171 9 is_stmt 0 view .LVU145
- 479 0052 D3F81412 		ldr	r1, [r3, #532]
- 480              		.loc 1 171 17 view .LVU146
- 481 0056 21EA0201 		bic	r1, r1, r2
- 482 005a C3F81412 		str	r1, [r3, #532]
- 172:Core/Src/CAN_Driver.c ****     //active filter
- 173:Core/Src/CAN_Driver.c ****     CAN1->FA1R |= (unsigned int)(1 << CAN_FilterId);
- 483              		.loc 1 173 5 is_stmt 1 view .LVU147
- 484              		.loc 1 173 9 is_stmt 0 view .LVU148
- 485 005e D3F81C12 		ldr	r1, [r3, #540]
- 486              		.loc 1 173 16 view .LVU149
- 487 0062 0A43     		orrs	r2, r2, r1
- 488 0064 C3F81C22 		str	r2, [r3, #540]
- 174:Core/Src/CAN_Driver.c ****     //reset initialization mode for filter banks
- 175:Core/Src/CAN_Driver.c ****     CAN1->FMR &= ~(1<<0);
- 489              		.loc 1 175 5 is_stmt 1 view .LVU150
- 490              		.loc 1 175 9 is_stmt 0 view .LVU151
- 491 0068 D3F80022 		ldr	r2, [r3, #512]
- 492              		.loc 1 175 15 view .LVU152
- 493 006c 22F00102 		bic	r2, r2, #1
- 494 0070 C3F80022 		str	r2, [r3, #512]
- 176:Core/Src/CAN_Driver.c **** 
- 177:Core/Src/CAN_Driver.c ****     //Increase filter index
- 178:Core/Src/CAN_Driver.c ****     CAN_FilterId += 1;
- 495              		.loc 1 178 5 is_stmt 1 view .LVU153
- 496              		.loc 1 178 18 is_stmt 0 view .LVU154
- 497 0074 0CF10103 		add	r3, ip, #1
- 498 0078 034A     		ldr	r2, .L30
- 499 007a 1380     		strh	r3, [r2]	@ movhi
- 500              	.LVL8:
- 501              	.L26:
- 179:Core/Src/CAN_Driver.c **** }
- 502              		.loc 1 179 1 view .LVU155
- 503 007c 7047     		bx	lr
- 504              	.LVL9:
- 505              	.L28:
-ARM GAS  /tmp/ccG9i6Tn.s 			page 13
+ 365              	.L19:
+ 366 0012 00BF     		.align	2
+ 367              	.L18:
+ 368 0014 00640040 		.word	1073767424
+ 369 0018 00000000 		.word	CAN_TxRdy
+ 370              		.cfi_endproc
+ 371              	.LFE69:
+ 373              		.section	.text.TUFAN_CAN_WriteMessage,"ax",%progbits
+ 374              		.align	1
+ 375              		.global	TUFAN_CAN_WriteMessage
+ 376              		.syntax unified
+ 377              		.thumb
+ 378              		.thumb_func
+ 380              	TUFAN_CAN_WriteMessage:
+ 381              	.LVL1:
+ 382              	.LFB70:
+ 159:Core/Src/CAN_Driver.c **** 
+ 160:Core/Src/CAN_Driver.c ****   
+ 161:Core/Src/CAN_Driver.c **** // WRITE A MESSAGE TO CAN PERHIPERAL AND TRANSMIT IT
+ 162:Core/Src/CAN_Driver.c **** void TUFAN_CAN_WriteMessage(CAN_Msg *msg){
+ 383              		.loc 1 162 42 is_stmt 1 view -0
+ 384              		.cfi_startproc
+ 385              		@ args = 0, pretend = 0, frame = 0
+ 386              		@ frame_needed = 0, uses_anonymous_args = 0
+ 387              		@ link register save eliminated.
+ 163:Core/Src/CAN_Driver.c ****     
+ 164:Core/Src/CAN_Driver.c ****     CAN1->sTxMailBox[0].TIR = (unsigned int)0; // reset TIR register
+ 388              		.loc 1 164 5 view .LVU121
+ 389              		.loc 1 164 29 is_stmt 0 view .LVU122
+ 390 0000 2D4B     		ldr	r3, .L25
+ 391 0002 0022     		movs	r2, #0
+ 392 0004 C3F88021 		str	r2, [r3, #384]
+ 165:Core/Src/CAN_Driver.c **** 
+ 166:Core/Src/CAN_Driver.c ****     if(msg->format == STANDARD_FORMAT) // Setup identifier information, standard ID
+ 393              		.loc 1 166 5 is_stmt 1 view .LVU123
+ 394              		.loc 1 166 11 is_stmt 0 view .LVU124
+ 395 0008 437B     		ldrb	r3, [r0, #13]	@ zero_extendqisi2
+ 396              		.loc 1 166 7 view .LVU125
+ 397 000a 002B     		cmp	r3, #0
+ 398 000c 41D1     		bne	.L21
+ 167:Core/Src/CAN_Driver.c ****         CAN1->sTxMailBox[0].TIR |= (unsigned int)(msg->id << 21) | (0x00000000U);
+ 399              		.loc 1 167 9 is_stmt 1 view .LVU126
+ 400              		.loc 1 167 28 is_stmt 0 view .LVU127
+ 401 000e 2A4A     		ldr	r2, .L25
+ 402 0010 D2F88031 		ldr	r3, [r2, #384]
+ 403              		.loc 1 167 54 view .LVU128
+ 404 0014 0168     		ldr	r1, [r0]
+ 405              		.loc 1 167 33 view .LVU129
+ 406 0016 43EA4153 		orr	r3, r3, r1, lsl #21
+ 407 001a C2F88031 		str	r3, [r2, #384]
+ 408              	.L22:
+ 168:Core/Src/CAN_Driver.c ****     else // extended ID
+ 169:Core/Src/CAN_Driver.c ****         CAN1->sTxMailBox[0].TIR |= (unsigned int)(msg->id << 3) | (0x00000004U);
+ 170:Core/Src/CAN_Driver.c ****     // Setup type information
+ 171:Core/Src/CAN_Driver.c ****     if(msg->type == DATA_FRAME) // Data frame
+ 409              		.loc 1 171 5 is_stmt 1 view .LVU130
+ 410              		.loc 1 171 11 is_stmt 0 view .LVU131
+ARM GAS  /tmp/ccgfVqt0.s 			page 11
 
 
- 151:Core/Src/CAN_Driver.c **** ;
- 506              		.loc 1 151 9 is_stmt 1 view .LVU156
- 151:Core/Src/CAN_Driver.c **** ;
- 507              		.loc 1 151 22 is_stmt 0 view .LVU157
- 508 007e C000     		lsls	r0, r0, #3
- 509              	.LVL10:
- 151:Core/Src/CAN_Driver.c **** ;
- 510              		.loc 1 151 19 view .LVU158
- 511 0080 40F00400 		orr	r0, r0, #4
- 512              	.LVL11:
- 151:Core/Src/CAN_Driver.c **** ;
- 513              		.loc 1 151 19 view .LVU159
- 514 0084 C4E7     		b	.L29
- 515              	.L31:
- 516 0086 00BF     		.align	2
- 517              	.L30:
- 518 0088 00000000 		.word	CAN_FilterId.0
- 519 008c 00640040 		.word	1073767424
- 520              		.cfi_endproc
- 521              	.LFE72:
- 523              		.section	.text.CAN_GPIO_Init,"ax",%progbits
- 524              		.align	1
- 525              		.global	CAN_GPIO_Init
- 526              		.syntax unified
- 527              		.thumb
- 528              		.thumb_func
- 530              	CAN_GPIO_Init:
- 531              	.LFB73:
- 180:Core/Src/CAN_Driver.c **** 
- 181:Core/Src/CAN_Driver.c **** 
- 182:Core/Src/CAN_Driver.c **** 
- 183:Core/Src/CAN_Driver.c **** void CAN_GPIO_Init(void){
- 532              		.loc 1 183 25 is_stmt 1 view -0
- 533              		.cfi_startproc
- 534              		@ args = 0, pretend = 0, frame = 0
- 535              		@ frame_needed = 0, uses_anonymous_args = 0
- 536              		@ link register save eliminated.
- 184:Core/Src/CAN_Driver.c ****     //PA11 input mode
- 185:Core/Src/CAN_Driver.c ****     GPIOA->CRH &= ~(1<<12);
- 537              		.loc 1 185 5 view .LVU161
- 538              		.loc 1 185 10 is_stmt 0 view .LVU162
- 539 0000 154B     		ldr	r3, .L33
- 540 0002 5A68     		ldr	r2, [r3, #4]
- 541              		.loc 1 185 16 view .LVU163
- 542 0004 22F48052 		bic	r2, r2, #4096
- 543 0008 5A60     		str	r2, [r3, #4]
- 186:Core/Src/CAN_Driver.c ****     GPIOA->CRH &= ~(1<<13);
- 544              		.loc 1 186 5 is_stmt 1 view .LVU164
- 545              		.loc 1 186 10 is_stmt 0 view .LVU165
- 546 000a 5A68     		ldr	r2, [r3, #4]
- 547              		.loc 1 186 16 view .LVU166
- 548 000c 22F40052 		bic	r2, r2, #8192
- 549 0010 5A60     		str	r2, [r3, #4]
- 187:Core/Src/CAN_Driver.c ****     //PA11 floating input
- 188:Core/Src/CAN_Driver.c ****     GPIOA->CRH |= (1<<14);
- 550              		.loc 1 188 5 is_stmt 1 view .LVU167
- 551              		.loc 1 188 10 is_stmt 0 view .LVU168
-ARM GAS  /tmp/ccG9i6Tn.s 			page 14
+ 411 001e 837B     		ldrb	r3, [r0, #14]	@ zero_extendqisi2
+ 412              		.loc 1 171 7 view .LVU132
+ 413 0020 002B     		cmp	r3, #0
+ 414 0022 41D1     		bne	.L23
+ 172:Core/Src/CAN_Driver.c ****         CAN1->sTxMailBox[0].TIR |= (0x00000000U);
+ 415              		.loc 1 172 9 is_stmt 1 view .LVU133
+ 416              		.loc 1 172 28 is_stmt 0 view .LVU134
+ 417 0024 244B     		ldr	r3, .L25
+ 418 0026 D3F88021 		ldr	r2, [r3, #384]
+ 419              		.loc 1 172 33 view .LVU135
+ 420 002a C3F88021 		str	r2, [r3, #384]
+ 421              	.L24:
+ 173:Core/Src/CAN_Driver.c ****     else    //remote frame
+ 174:Core/Src/CAN_Driver.c ****         CAN1->sTxMailBox[0].TIR |= (0x00000002U);
+ 175:Core/Src/CAN_Driver.c **** 
+ 176:Core/Src/CAN_Driver.c ****     // Setup data bytes
+ 177:Core/Src/CAN_Driver.c ****     CAN1->sTxMailBox[0].TDLR = (((unsigned int)msg->data[3] << 24) | 
+ 422              		.loc 1 177 5 is_stmt 1 view .LVU136
+ 423              		.loc 1 177 57 is_stmt 0 view .LVU137
+ 424 002e C379     		ldrb	r3, [r0, #7]	@ zero_extendqisi2
+ 178:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[2] << 16) |
+ 425              		.loc 1 178 57 view .LVU138
+ 426 0030 8279     		ldrb	r2, [r0, #6]	@ zero_extendqisi2
+ 427              		.loc 1 178 61 view .LVU139
+ 428 0032 1204     		lsls	r2, r2, #16
+ 177:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[2] << 16) |
+ 429              		.loc 1 177 68 view .LVU140
+ 430 0034 42EA0362 		orr	r2, r2, r3, lsl #24
+ 179:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[1] <<  8) | 
+ 431              		.loc 1 179 57 view .LVU141
+ 432 0038 4379     		ldrb	r3, [r0, #5]	@ zero_extendqisi2
+ 178:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[2] << 16) |
+ 433              		.loc 1 178 68 view .LVU142
+ 434 003a 42EA0322 		orr	r2, r2, r3, lsl #8
+ 180:Core/Src/CAN_Driver.c ****                               
+ 181:Core/Src/CAN_Driver.c ****   ((unsigned int)msg->data[0]));
+ 435              		.loc 1 181 27 view .LVU143
+ 436 003e 0379     		ldrb	r3, [r0, #4]	@ zero_extendqisi2
+ 179:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[1] <<  8) | 
+ 437              		.loc 1 179 68 view .LVU144
+ 438 0040 1A43     		orrs	r2, r2, r3
+ 177:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[2] << 16) |
+ 439              		.loc 1 177 30 view .LVU145
+ 440 0042 1D4B     		ldr	r3, .L25
+ 441 0044 C3F88821 		str	r2, [r3, #392]
+ 182:Core/Src/CAN_Driver.c ****     CAN1->sTxMailBox[0].TDHR = (((unsigned int)msg->data[7] << 24) | 
+ 442              		.loc 1 182 5 is_stmt 1 view .LVU146
+ 443              		.loc 1 182 57 is_stmt 0 view .LVU147
+ 444 0048 C17A     		ldrb	r1, [r0, #11]	@ zero_extendqisi2
+ 183:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[6] << 16) |
+ 445              		.loc 1 183 57 view .LVU148
+ 446 004a 827A     		ldrb	r2, [r0, #10]	@ zero_extendqisi2
+ 447              		.loc 1 183 61 view .LVU149
+ 448 004c 1204     		lsls	r2, r2, #16
+ 182:Core/Src/CAN_Driver.c ****     CAN1->sTxMailBox[0].TDHR = (((unsigned int)msg->data[7] << 24) | 
+ 449              		.loc 1 182 68 view .LVU150
+ 450 004e 42EA0162 		orr	r2, r2, r1, lsl #24
+ARM GAS  /tmp/ccgfVqt0.s 			page 12
 
 
- 552 0012 5A68     		ldr	r2, [r3, #4]
- 553              		.loc 1 188 16 view .LVU169
- 554 0014 42F48042 		orr	r2, r2, #16384
- 555 0018 5A60     		str	r2, [r3, #4]
- 189:Core/Src/CAN_Driver.c ****     GPIOA->CRH = ~(1<<15);
- 556              		.loc 1 189 5 is_stmt 1 view .LVU170
- 557              		.loc 1 189 16 is_stmt 0 view .LVU171
- 558 001a 6FF40042 		mvn	r2, #32768
- 559 001e 5A60     		str	r2, [r3, #4]
- 190:Core/Src/CAN_Driver.c ****     //PA12 output mode, max speed 50 MHz
- 191:Core/Src/CAN_Driver.c ****     GPIOA -> CRH |= (1<<16);
- 560              		.loc 1 191 5 is_stmt 1 view .LVU172
- 561              		.loc 1 191 11 is_stmt 0 view .LVU173
- 562 0020 5A68     		ldr	r2, [r3, #4]
- 563              		.loc 1 191 18 view .LVU174
- 564 0022 42F48032 		orr	r2, r2, #65536
- 565 0026 5A60     		str	r2, [r3, #4]
- 192:Core/Src/CAN_Driver.c ****     GPIOA -> CRH |= (1<<17);
- 566              		.loc 1 192 5 is_stmt 1 view .LVU175
- 567              		.loc 1 192 11 is_stmt 0 view .LVU176
- 568 0028 5A68     		ldr	r2, [r3, #4]
- 569              		.loc 1 192 18 view .LVU177
- 570 002a 42F40032 		orr	r2, r2, #131072
- 571 002e 5A60     		str	r2, [r3, #4]
- 193:Core/Src/CAN_Driver.c ****     //PA12 alternate function output push-pull
- 194:Core/Src/CAN_Driver.c ****     GPIOA -> CRH &= ~(1<<18);
- 572              		.loc 1 194 5 is_stmt 1 view .LVU178
- 573              		.loc 1 194 11 is_stmt 0 view .LVU179
- 574 0030 5A68     		ldr	r2, [r3, #4]
- 575              		.loc 1 194 18 view .LVU180
- 576 0032 22F48022 		bic	r2, r2, #262144
- 577 0036 5A60     		str	r2, [r3, #4]
- 195:Core/Src/CAN_Driver.c ****     GPIOA -> CRH |= (1<<19);
- 578              		.loc 1 195 5 is_stmt 1 view .LVU181
- 579              		.loc 1 195 11 is_stmt 0 view .LVU182
- 580 0038 5A68     		ldr	r2, [r3, #4]
- 581              		.loc 1 195 18 view .LVU183
- 582 003a 42F40022 		orr	r2, r2, #524288
- 583 003e 5A60     		str	r2, [r3, #4]
- 196:Core/Src/CAN_Driver.c ****     //CAN REMAP = 0
- 197:Core/Src/CAN_Driver.c ****     AFIO->MAPR &= ~(1<<13);
- 584              		.loc 1 197 5 is_stmt 1 view .LVU184
- 585              		.loc 1 197 9 is_stmt 0 view .LVU185
- 586 0040 A3F50063 		sub	r3, r3, #2048
- 587 0044 5A68     		ldr	r2, [r3, #4]
- 588              		.loc 1 197 16 view .LVU186
- 589 0046 22F40052 		bic	r2, r2, #8192
- 590 004a 5A60     		str	r2, [r3, #4]
- 198:Core/Src/CAN_Driver.c ****     AFIO->MAPR &= ~(1<<14);
- 591              		.loc 1 198 5 is_stmt 1 view .LVU187
- 592              		.loc 1 198 9 is_stmt 0 view .LVU188
- 593 004c 5A68     		ldr	r2, [r3, #4]
- 594              		.loc 1 198 16 view .LVU189
- 595 004e 22F48042 		bic	r2, r2, #16384
- 596 0052 5A60     		str	r2, [r3, #4]
- 199:Core/Src/CAN_Driver.c **** }
- 597              		.loc 1 199 1 view .LVU190
-ARM GAS  /tmp/ccG9i6Tn.s 			page 15
+ 184:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[5] <<  8) |
+ 451              		.loc 1 184 57 view .LVU151
+ 452 0052 417A     		ldrb	r1, [r0, #9]	@ zero_extendqisi2
+ 183:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[6] << 16) |
+ 453              		.loc 1 183 68 view .LVU152
+ 454 0054 42EA0122 		orr	r2, r2, r1, lsl #8
+ 185:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[4]));
+ 455              		.loc 1 185 57 view .LVU153
+ 456 0058 017A     		ldrb	r1, [r0, #8]	@ zero_extendqisi2
+ 184:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[5] <<  8) |
+ 457              		.loc 1 184 68 view .LVU154
+ 458 005a 0A43     		orrs	r2, r2, r1
+ 182:Core/Src/CAN_Driver.c ****                                 ((unsigned int)msg->data[6] << 16) |
+ 459              		.loc 1 182 30 view .LVU155
+ 460 005c C3F88C21 		str	r2, [r3, #396]
+ 186:Core/Src/CAN_Driver.c **** 
+ 187:Core/Src/CAN_Driver.c ****     //SETUP LENGTH
+ 188:Core/Src/CAN_Driver.c ****     CAN1->sTxMailBox[0].TDTR &= ~(0xFUL << (0U));
+ 461              		.loc 1 188 5 is_stmt 1 view .LVU156
+ 462              		.loc 1 188 24 is_stmt 0 view .LVU157
+ 463 0060 D3F88421 		ldr	r2, [r3, #388]
+ 464              		.loc 1 188 30 view .LVU158
+ 465 0064 22F00F02 		bic	r2, r2, #15
+ 466 0068 C3F88421 		str	r2, [r3, #388]
+ 189:Core/Src/CAN_Driver.c ****     CAN1->sTxMailBox[0].TDTR |= (msg->len & (0xFUL << (0U)));
+ 467              		.loc 1 189 5 is_stmt 1 view .LVU159
+ 468              		.loc 1 189 24 is_stmt 0 view .LVU160
+ 469 006c D3F88421 		ldr	r2, [r3, #388]
+ 470              		.loc 1 189 37 view .LVU161
+ 471 0070 017B     		ldrb	r1, [r0, #12]	@ zero_extendqisi2
+ 472              		.loc 1 189 43 view .LVU162
+ 473 0072 01F00F01 		and	r1, r1, #15
+ 474              		.loc 1 189 30 view .LVU163
+ 475 0076 0A43     		orrs	r2, r2, r1
+ 476 0078 C3F88421 		str	r2, [r3, #388]
+ 190:Core/Src/CAN_Driver.c ****     CAN1->IER |= CAN_IER_TMEIE;                   // Enable TME interrup
+ 477              		.loc 1 190 5 is_stmt 1 view .LVU164
+ 478              		.loc 1 190 9 is_stmt 0 view .LVU165
+ 479 007c 5A69     		ldr	r2, [r3, #20]
+ 480              		.loc 1 190 15 view .LVU166
+ 481 007e 42F00102 		orr	r2, r2, #1
+ 482 0082 5A61     		str	r2, [r3, #20]
+ 191:Core/Src/CAN_Driver.c ****     CAN1->sTxMailBox[0].TIR |= CAN_TI0R_TXRQ;     // Transmit message
+ 483              		.loc 1 191 5 is_stmt 1 view .LVU167
+ 484              		.loc 1 191 24 is_stmt 0 view .LVU168
+ 485 0084 D3F88021 		ldr	r2, [r3, #384]
+ 486              		.loc 1 191 29 view .LVU169
+ 487 0088 42F00102 		orr	r2, r2, #1
+ 488 008c C3F88021 		str	r2, [r3, #384]
+ 192:Core/Src/CAN_Driver.c **** }
+ 489              		.loc 1 192 1 view .LVU170
+ 490 0090 7047     		bx	lr
+ 491              	.L21:
+ 169:Core/Src/CAN_Driver.c ****     // Setup type information
+ 492              		.loc 1 169 9 is_stmt 1 view .LVU171
+ 169:Core/Src/CAN_Driver.c ****     // Setup type information
+ 493              		.loc 1 169 28 is_stmt 0 view .LVU172
+ARM GAS  /tmp/ccgfVqt0.s 			page 13
 
 
- 598 0054 7047     		bx	lr
- 599              	.L34:
- 600 0056 00BF     		.align	2
- 601              	.L33:
- 602 0058 00080140 		.word	1073809408
- 603              		.cfi_endproc
- 604              	.LFE73:
- 606              		.section	.bss.CAN_FilterId.0,"aw",%nobits
- 607              		.align	1
- 610              	CAN_FilterId.0:
- 611 0000 0000     		.space	2
- 612              		.global	CAN_RxRdy
- 613              		.section	.bss.CAN_RxRdy,"aw",%nobits
- 614              		.align	2
- 617              	CAN_RxRdy:
- 618 0000 00000000 		.space	4
- 619              		.global	CAN_TxRdy
- 620              		.section	.bss.CAN_TxRdy,"aw",%nobits
- 621              		.align	2
- 624              	CAN_TxRdy:
- 625 0000 00000000 		.space	4
- 626              		.global	CAN_RxMsg
- 627              		.section	.bss.CAN_RxMsg,"aw",%nobits
- 628              		.align	2
- 631              	CAN_RxMsg:
- 632 0000 00000000 		.space	16
- 632      00000000 
- 632      00000000 
- 632      00000000 
- 633              		.global	CAN_TxMsg
- 634              		.section	.bss.CAN_TxMsg,"aw",%nobits
+ 494 0092 094A     		ldr	r2, .L25
+ 495 0094 D2F88031 		ldr	r3, [r2, #384]
+ 169:Core/Src/CAN_Driver.c ****     // Setup type information
+ 496              		.loc 1 169 54 view .LVU173
+ 497 0098 0168     		ldr	r1, [r0]
+ 169:Core/Src/CAN_Driver.c ****     // Setup type information
+ 498              		.loc 1 169 33 view .LVU174
+ 499 009a 43EAC103 		orr	r3, r3, r1, lsl #3
+ 500 009e 43F00403 		orr	r3, r3, #4
+ 501 00a2 C2F88031 		str	r3, [r2, #384]
+ 502 00a6 BAE7     		b	.L22
+ 503              	.L23:
+ 174:Core/Src/CAN_Driver.c **** 
+ 504              		.loc 1 174 9 is_stmt 1 view .LVU175
+ 174:Core/Src/CAN_Driver.c **** 
+ 505              		.loc 1 174 28 is_stmt 0 view .LVU176
+ 506 00a8 034A     		ldr	r2, .L25
+ 507 00aa D2F88031 		ldr	r3, [r2, #384]
+ 174:Core/Src/CAN_Driver.c **** 
+ 508              		.loc 1 174 33 view .LVU177
+ 509 00ae 43F00203 		orr	r3, r3, #2
+ 510 00b2 C2F88031 		str	r3, [r2, #384]
+ 511 00b6 BAE7     		b	.L24
+ 512              	.L26:
+ 513              		.align	2
+ 514              	.L25:
+ 515 00b8 00640040 		.word	1073767424
+ 516              		.cfi_endproc
+ 517              	.LFE70:
+ 519              		.section	.text.TUFAN_CAN_ReadMessage,"ax",%progbits
+ 520              		.align	1
+ 521              		.global	TUFAN_CAN_ReadMessage
+ 522              		.syntax unified
+ 523              		.thumb
+ 524              		.thumb_func
+ 526              	TUFAN_CAN_ReadMessage:
+ 527              	.LVL2:
+ 528              	.LFB71:
+ 193:Core/Src/CAN_Driver.c **** 
+ 194:Core/Src/CAN_Driver.c **** void TUFAN_CAN_ReadMessage(CAN_Msg *msg){
+ 529              		.loc 1 194 41 is_stmt 1 view -0
+ 530              		.cfi_startproc
+ 531              		@ args = 0, pretend = 0, frame = 0
+ 532              		@ frame_needed = 0, uses_anonymous_args = 0
+ 533              		@ link register save eliminated.
+ 195:Core/Src/CAN_Driver.c ****                                                     // Read identifier information
+ 196:Core/Src/CAN_Driver.c ****   if ((CAN1->sFIFOMailBox[0].RIR & 0x00000000U) == 0) { // Standard ID
+ 534              		.loc 1 196 3 view .LVU179
+ 535              		.loc 1 196 29 is_stmt 0 view .LVU180
+ 536 0000 1D4B     		ldr	r3, .L30
+ 537 0002 D3F8B021 		ldr	r2, [r3, #432]
+ 197:Core/Src/CAN_Driver.c ****     msg->format = STANDARD_FORMAT;
+ 538              		.loc 1 197 5 is_stmt 1 view .LVU181
+ 539              		.loc 1 197 17 is_stmt 0 view .LVU182
+ 540 0006 0022     		movs	r2, #0
+ 541 0008 4273     		strb	r2, [r0, #13]
+ 198:Core/Src/CAN_Driver.c ****     msg->id     = (uint32_t)0x000007FF & (CAN1->sFIFOMailBox[0].RIR >> 21);
+ARM GAS  /tmp/ccgfVqt0.s 			page 14
+
+
+ 542              		.loc 1 198 5 is_stmt 1 view .LVU183
+ 543              		.loc 1 198 64 is_stmt 0 view .LVU184
+ 544 000a D3F8B021 		ldr	r2, [r3, #432]
+ 545              		.loc 1 198 69 view .LVU185
+ 546 000e 520D     		lsrs	r2, r2, #21
+ 547              		.loc 1 198 17 view .LVU186
+ 548 0010 0260     		str	r2, [r0]
+ 199:Core/Src/CAN_Driver.c ****   }  else  {                                          // Extended ID
+ 200:Core/Src/CAN_Driver.c ****     msg->format = EXTENDED_FORMAT;
+ 201:Core/Src/CAN_Driver.c ****     msg->id     = (uint32_t)0x0003FFFF & (CAN1->sFIFOMailBox[0].RIR >> 3);
+ 202:Core/Src/CAN_Driver.c ****   }
+ 203:Core/Src/CAN_Driver.c ****                                                   // Read type information
+ 204:Core/Src/CAN_Driver.c ****   if ((CAN1->sFIFOMailBox[0].RIR & 0x00000002U) == 0) {
+ 549              		.loc 1 204 3 is_stmt 1 view .LVU187
+ 550              		.loc 1 204 29 is_stmt 0 view .LVU188
+ 551 0012 D3F8B031 		ldr	r3, [r3, #432]
+ 552              		.loc 1 204 6 view .LVU189
+ 553 0016 13F0020F 		tst	r3, #2
+ 554 001a 2AD1     		bne	.L28
+ 205:Core/Src/CAN_Driver.c ****     msg->type =   DATA_FRAME;                     // DATA   FRAME
+ 555              		.loc 1 205 5 is_stmt 1 view .LVU190
+ 556              		.loc 1 205 15 is_stmt 0 view .LVU191
+ 557 001c 0023     		movs	r3, #0
+ 558 001e 8373     		strb	r3, [r0, #14]
+ 559              	.L29:
+ 206:Core/Src/CAN_Driver.c ****   }  else  {
+ 207:Core/Src/CAN_Driver.c ****     msg->type = REMOTE_FRAME;                     // REMOTE FRAME
+ 208:Core/Src/CAN_Driver.c ****   }
+ 209:Core/Src/CAN_Driver.c ****                                                   // Read length (number of received bytes)
+ 210:Core/Src/CAN_Driver.c ****   msg->len = (unsigned char)0x0000000F & CAN1->sFIFOMailBox[0].RDTR;
+ 560              		.loc 1 210 3 is_stmt 1 view .LVU192
+ 561              		.loc 1 210 63 is_stmt 0 view .LVU193
+ 562 0020 154B     		ldr	r3, .L30
+ 563 0022 D3F8B421 		ldr	r2, [r3, #436]
+ 564              		.loc 1 210 40 view .LVU194
+ 565 0026 02F00F02 		and	r2, r2, #15
+ 566              		.loc 1 210 12 view .LVU195
+ 567 002a 0273     		strb	r2, [r0, #12]
+ 211:Core/Src/CAN_Driver.c ****                                                   // Read data bytes
+ 212:Core/Src/CAN_Driver.c ****   msg->data[0] = (unsigned int)0x000000FF & (CAN1->sFIFOMailBox[0].RDLR);
+ 568              		.loc 1 212 3 is_stmt 1 view .LVU196
+ 569              		.loc 1 212 67 is_stmt 0 view .LVU197
+ 570 002c D3F8B821 		ldr	r2, [r3, #440]
+ 571              		.loc 1 212 16 view .LVU198
+ 572 0030 0271     		strb	r2, [r0, #4]
+ 213:Core/Src/CAN_Driver.c ****   msg->data[1] = (unsigned int)0x000000FF & (CAN1->sFIFOMailBox[0].RDLR >> 8);
+ 573              		.loc 1 213 3 is_stmt 1 view .LVU199
+ 574              		.loc 1 213 67 is_stmt 0 view .LVU200
+ 575 0032 D3F8B821 		ldr	r2, [r3, #440]
+ 576              		.loc 1 213 73 view .LVU201
+ 577 0036 120A     		lsrs	r2, r2, #8
+ 578              		.loc 1 213 16 view .LVU202
+ 579 0038 4271     		strb	r2, [r0, #5]
+ 214:Core/Src/CAN_Driver.c ****   msg->data[2] = (unsigned int)0x000000FF & (CAN1->sFIFOMailBox[0].RDLR >> 16);
+ 580              		.loc 1 214 3 is_stmt 1 view .LVU203
+ 581              		.loc 1 214 67 is_stmt 0 view .LVU204
+ 582 003a D3F8B821 		ldr	r2, [r3, #440]
+ARM GAS  /tmp/ccgfVqt0.s 			page 15
+
+
+ 583              		.loc 1 214 73 view .LVU205
+ 584 003e 120C     		lsrs	r2, r2, #16
+ 585              		.loc 1 214 16 view .LVU206
+ 586 0040 8271     		strb	r2, [r0, #6]
+ 215:Core/Src/CAN_Driver.c ****   msg->data[3] = (unsigned int)0x000000FF & (CAN1->sFIFOMailBox[0].RDLR >> 24);
+ 587              		.loc 1 215 3 is_stmt 1 view .LVU207
+ 588              		.loc 1 215 67 is_stmt 0 view .LVU208
+ 589 0042 D3F8B821 		ldr	r2, [r3, #440]
+ 590              		.loc 1 215 73 view .LVU209
+ 591 0046 120E     		lsrs	r2, r2, #24
+ 592              		.loc 1 215 16 view .LVU210
+ 593 0048 C271     		strb	r2, [r0, #7]
+ 216:Core/Src/CAN_Driver.c **** 
+ 217:Core/Src/CAN_Driver.c ****   msg->data[4] = (unsigned int)0x000000FF & (CAN1->sFIFOMailBox[0].RDHR);
+ 594              		.loc 1 217 3 is_stmt 1 view .LVU211
+ 595              		.loc 1 217 67 is_stmt 0 view .LVU212
+ 596 004a D3F8BC21 		ldr	r2, [r3, #444]
+ 597              		.loc 1 217 16 view .LVU213
+ 598 004e 0272     		strb	r2, [r0, #8]
+ 218:Core/Src/CAN_Driver.c ****   msg->data[5] = (unsigned int)0x000000FF & (CAN1->sFIFOMailBox[0].RDHR >> 8);
+ 599              		.loc 1 218 3 is_stmt 1 view .LVU214
+ 600              		.loc 1 218 67 is_stmt 0 view .LVU215
+ 601 0050 D3F8BC21 		ldr	r2, [r3, #444]
+ 602              		.loc 1 218 73 view .LVU216
+ 603 0054 120A     		lsrs	r2, r2, #8
+ 604              		.loc 1 218 16 view .LVU217
+ 605 0056 4272     		strb	r2, [r0, #9]
+ 219:Core/Src/CAN_Driver.c ****   msg->data[6] = (unsigned int)0x000000FF & (CAN1->sFIFOMailBox[0].RDHR >> 16);
+ 606              		.loc 1 219 3 is_stmt 1 view .LVU218
+ 607              		.loc 1 219 67 is_stmt 0 view .LVU219
+ 608 0058 D3F8BC21 		ldr	r2, [r3, #444]
+ 609              		.loc 1 219 73 view .LVU220
+ 610 005c 120C     		lsrs	r2, r2, #16
+ 611              		.loc 1 219 16 view .LVU221
+ 612 005e 8272     		strb	r2, [r0, #10]
+ 220:Core/Src/CAN_Driver.c ****   msg->data[7] = (unsigned int)0x000000FF & (CAN1->sFIFOMailBox[0].RDHR >> 24);
+ 613              		.loc 1 220 3 is_stmt 1 view .LVU222
+ 614              		.loc 1 220 67 is_stmt 0 view .LVU223
+ 615 0060 D3F8BC21 		ldr	r2, [r3, #444]
+ 616              		.loc 1 220 73 view .LVU224
+ 617 0064 120E     		lsrs	r2, r2, #24
+ 618              		.loc 1 220 16 view .LVU225
+ 619 0066 C272     		strb	r2, [r0, #11]
+ 221:Core/Src/CAN_Driver.c **** 
+ 222:Core/Src/CAN_Driver.c ****   CAN1->RF0R |= CAN_RF0R_RFOM0;                  
+ 620              		.loc 1 222 3 is_stmt 1 view .LVU226
+ 621              		.loc 1 222 7 is_stmt 0 view .LVU227
+ 622 0068 DA68     		ldr	r2, [r3, #12]
+ 623              		.loc 1 222 14 view .LVU228
+ 624 006a 42F02002 		orr	r2, r2, #32
+ 625 006e DA60     		str	r2, [r3, #12]
+ 223:Core/Src/CAN_Driver.c **** }
+ 626              		.loc 1 223 1 view .LVU229
+ 627 0070 7047     		bx	lr
+ 628              	.L28:
+ 207:Core/Src/CAN_Driver.c ****   }
+ 629              		.loc 1 207 5 is_stmt 1 view .LVU230
+ARM GAS  /tmp/ccgfVqt0.s 			page 16
+
+
+ 207:Core/Src/CAN_Driver.c ****   }
+ 630              		.loc 1 207 15 is_stmt 0 view .LVU231
+ 631 0072 0123     		movs	r3, #1
+ 632 0074 8373     		strb	r3, [r0, #14]
+ 633 0076 D3E7     		b	.L29
+ 634              	.L31:
  635              		.align	2
- 638              	CAN_TxMsg:
- 639 0000 00000000 		.space	16
- 639      00000000 
- 639      00000000 
- 639      00000000 
- 640              		.text
- 641              	.Letext0:
- 642              		.file 2 "/home/bugraaa/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/arm-n
- 643              		.file 3 "/home/bugraaa/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/arm-n
- 644              		.file 4 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
- 645              		.file 5 "Core/Inc/CAN_Driver.h"
-ARM GAS  /tmp/ccG9i6Tn.s 			page 16
+ 636              	.L30:
+ 637 0078 00640040 		.word	1073767424
+ 638              		.cfi_endproc
+ 639              	.LFE71:
+ 641              		.section	.text.TUFAN_CAN_SetFilter,"ax",%progbits
+ 642              		.align	1
+ 643              		.global	TUFAN_CAN_SetFilter
+ 644              		.syntax unified
+ 645              		.thumb
+ 646              		.thumb_func
+ 648              	TUFAN_CAN_SetFilter:
+ 649              	.LVL3:
+ 650              	.LFB72:
+ 224:Core/Src/CAN_Driver.c **** 
+ 225:Core/Src/CAN_Driver.c **** 
+ 226:Core/Src/CAN_Driver.c **** void TUFAN_CAN_SetFilter(unsigned int id, unsigned char format){
+ 651              		.loc 1 226 64 is_stmt 1 view -0
+ 652              		.cfi_startproc
+ 653              		@ args = 0, pretend = 0, frame = 0
+ 654              		@ frame_needed = 0, uses_anonymous_args = 0
+ 655              		@ link register save eliminated.
+ 227:Core/Src/CAN_Driver.c ****     static unsigned short CAN_FilterId = 0;
+ 656              		.loc 1 227 5 view .LVU233
+ 228:Core/Src/CAN_Driver.c ****     unsigned int CAN_MsgId             = 0;
+ 657              		.loc 1 228 5 view .LVU234
+ 229:Core/Src/CAN_Driver.c **** 
+ 230:Core/Src/CAN_Driver.c ****     if (CAN_FilterId > 13) {
+ 658              		.loc 1 230 5 view .LVU235
+ 659              		.loc 1 230 22 is_stmt 0 view .LVU236
+ 660 0000 214B     		ldr	r3, .L36
+ 661 0002 B3F800C0 		ldrh	ip, [r3]
+ 662              		.loc 1 230 8 view .LVU237
+ 663 0006 BCF10D0F 		cmp	ip, #13
+ 664 000a 38D8     		bhi	.L32
+ 231:Core/Src/CAN_Driver.c ****         return;
+ 232:Core/Src/CAN_Driver.c ****     }
+ 233:Core/Src/CAN_Driver.c **** 
+ 234:Core/Src/CAN_Driver.c ****     if (format == 0){
+ 665              		.loc 1 234 5 is_stmt 1 view .LVU238
+ 666              		.loc 1 234 8 is_stmt 0 view .LVU239
+ 667 000c C1BB     		cbnz	r1, .L34
+ 235:Core/Src/CAN_Driver.c ****         CAN_MsgId |= (unsigned int)(id<<21) | (0x00000000U);
+ 668              		.loc 1 235 9 is_stmt 1 view .LVU240
+ 669              		.loc 1 235 45 is_stmt 0 view .LVU241
+ 670 000e 4005     		lsls	r0, r0, #21
+ 671              	.LVL4:
+ 672              	.L35:
+ 236:Core/Src/CAN_Driver.c ****     } 
+ 237:Core/Src/CAN_Driver.c ****     else {
+ 238:Core/Src/CAN_Driver.c ****         CAN_MsgId |= (unsigned int)(id<<3) | (0x00000004U);
+ARM GAS  /tmp/ccgfVqt0.s 			page 17
+
+
+ 239:Core/Src/CAN_Driver.c ****     }
+ 240:Core/Src/CAN_Driver.c ****     //SET INITIALIZATION MODE FOR FILTER BANKS
+ 241:Core/Src/CAN_Driver.c ****     CAN1->FMR |= (1<<0); 
+ 673              		.loc 1 241 5 is_stmt 1 view .LVU242
+ 674              		.loc 1 241 9 is_stmt 0 view .LVU243
+ 675 0010 1E4B     		ldr	r3, .L36+4
+ 676 0012 D3F80022 		ldr	r2, [r3, #512]
+ 677              		.loc 1 241 15 view .LVU244
+ 678 0016 42F00102 		orr	r2, r2, #1
+ 679 001a C3F80022 		str	r2, [r3, #512]
+ 242:Core/Src/CAN_Driver.c ****     //DEACTIVE FILTER
+ 243:Core/Src/CAN_Driver.c ****     CAN1->FA1R &= ~(unsigned int)(1 << CAN_FilterId);//deactive filter 
+ 680              		.loc 1 243 5 is_stmt 1 view .LVU245
+ 681              		.loc 1 243 9 is_stmt 0 view .LVU246
+ 682 001e D3F81C12 		ldr	r1, [r3, #540]
+ 683              	.LVL5:
+ 684              		.loc 1 243 37 view .LVU247
+ 685 0022 0122     		movs	r2, #1
+ 686 0024 02FA0CF2 		lsl	r2, r2, ip
+ 687              		.loc 1 243 16 view .LVU248
+ 688 0028 21EA0201 		bic	r1, r1, r2
+ 689 002c C3F81C12 		str	r1, [r3, #540]
+ 244:Core/Src/CAN_Driver.c **** 
+ 245:Core/Src/CAN_Driver.c ****     //INITIALIZE FILTER
+ 246:Core/Src/CAN_Driver.c ****     //SET 32-BIT SCALE CONFIg
+ 247:Core/Src/CAN_Driver.c ****     CAN1->FS1R |= (unsigned int)(1 << CAN_FilterId);
+ 690              		.loc 1 247 5 is_stmt 1 view .LVU249
+ 691              		.loc 1 247 9 is_stmt 0 view .LVU250
+ 692 0030 D3F80C12 		ldr	r1, [r3, #524]
+ 693              		.loc 1 247 16 view .LVU251
+ 694 0034 1143     		orrs	r1, r1, r2
+ 695 0036 C3F80C12 		str	r1, [r3, #524]
+ 248:Core/Src/CAN_Driver.c ****     //SET 2 32-bit idenfitier list mode
+ 249:Core/Src/CAN_Driver.c ****     CAN1->FM1R &= ~(unsigned int)(1 << CAN_FilterId); //i changed to mask mode
+ 696              		.loc 1 249 5 is_stmt 1 view .LVU252
+ 697              		.loc 1 249 9 is_stmt 0 view .LVU253
+ 698 003a D3F80412 		ldr	r1, [r3, #516]
+ 699              		.loc 1 249 16 view .LVU254
+ 700 003e 21EA0201 		bic	r1, r1, r2
+ 701 0042 C3F80412 		str	r1, [r3, #516]
+ 250:Core/Src/CAN_Driver.c ****     
+ 251:Core/Src/CAN_Driver.c ****     //32-bit identifier
+ 252:Core/Src/CAN_Driver.c ****     CAN1->sFilterRegister[CAN_FilterId].FR1 = CAN_MsgId; //?????
+ 702              		.loc 1 252 5 is_stmt 1 view .LVU255
+ 703              		.loc 1 252 45 is_stmt 0 view .LVU256
+ 704 0046 0CF14801 		add	r1, ip, #72
+ 705 004a 43F83100 		str	r0, [r3, r1, lsl #3]
+ 253:Core/Src/CAN_Driver.c ****     //32-bit identifier
+ 254:Core/Src/CAN_Driver.c ****     CAN1->sFilterRegister[CAN_FilterId].FR2 = CAN_MsgId; //??????
+ 706              		.loc 1 254 5 is_stmt 1 view .LVU257
+ 707              		.loc 1 254 45 is_stmt 0 view .LVU258
+ 708 004e 03EBC101 		add	r1, r3, r1, lsl #3
+ 709 0052 4860     		str	r0, [r1, #4]
+ 255:Core/Src/CAN_Driver.c **** 
+ 256:Core/Src/CAN_Driver.c ****     //assign filter to FIFO 0
+ 257:Core/Src/CAN_Driver.c ****     CAN1->FFA1R &= ~(unsigned int)(1 << CAN_FilterId);
+ 710              		.loc 1 257 5 is_stmt 1 view .LVU259
+ARM GAS  /tmp/ccgfVqt0.s 			page 18
+
+
+ 711              		.loc 1 257 9 is_stmt 0 view .LVU260
+ 712 0054 D3F81412 		ldr	r1, [r3, #532]
+ 713              		.loc 1 257 17 view .LVU261
+ 714 0058 21EA0201 		bic	r1, r1, r2
+ 715 005c C3F81412 		str	r1, [r3, #532]
+ 258:Core/Src/CAN_Driver.c ****     //active filter
+ 259:Core/Src/CAN_Driver.c ****     CAN1->FA1R |= (unsigned int)(1 << CAN_FilterId);
+ 716              		.loc 1 259 5 is_stmt 1 view .LVU262
+ 717              		.loc 1 259 9 is_stmt 0 view .LVU263
+ 718 0060 D3F81C12 		ldr	r1, [r3, #540]
+ 719              		.loc 1 259 16 view .LVU264
+ 720 0064 0A43     		orrs	r2, r2, r1
+ 721 0066 C3F81C22 		str	r2, [r3, #540]
+ 260:Core/Src/CAN_Driver.c ****     //reset initialization mode for filter banks
+ 261:Core/Src/CAN_Driver.c ****     CAN1->FMR &= ~(1<<0);
+ 722              		.loc 1 261 5 is_stmt 1 view .LVU265
+ 723              		.loc 1 261 9 is_stmt 0 view .LVU266
+ 724 006a D3F80022 		ldr	r2, [r3, #512]
+ 725              		.loc 1 261 15 view .LVU267
+ 726 006e 22F00102 		bic	r2, r2, #1
+ 727 0072 C3F80022 		str	r2, [r3, #512]
+ 262:Core/Src/CAN_Driver.c **** 
+ 263:Core/Src/CAN_Driver.c ****     //Increase filter index
+ 264:Core/Src/CAN_Driver.c ****     CAN_FilterId += 1;
+ 728              		.loc 1 264 5 is_stmt 1 view .LVU268
+ 729              		.loc 1 264 18 is_stmt 0 view .LVU269
+ 730 0076 0CF10103 		add	r3, ip, #1
+ 731 007a 034A     		ldr	r2, .L36
+ 732 007c 1380     		strh	r3, [r2]	@ movhi
+ 733              	.LVL6:
+ 734              	.L32:
+ 265:Core/Src/CAN_Driver.c **** }
+ 735              		.loc 1 265 1 view .LVU270
+ 736 007e 7047     		bx	lr
+ 737              	.LVL7:
+ 738              	.L34:
+ 238:Core/Src/CAN_Driver.c ****     }
+ 739              		.loc 1 238 9 is_stmt 1 view .LVU271
+ 238:Core/Src/CAN_Driver.c ****     }
+ 740              		.loc 1 238 22 is_stmt 0 view .LVU272
+ 741 0080 C000     		lsls	r0, r0, #3
+ 742              	.LVL8:
+ 238:Core/Src/CAN_Driver.c ****     }
+ 743              		.loc 1 238 19 view .LVU273
+ 744 0082 40F00400 		orr	r0, r0, #4
+ 745              	.LVL9:
+ 238:Core/Src/CAN_Driver.c ****     }
+ 746              		.loc 1 238 19 view .LVU274
+ 747 0086 C3E7     		b	.L35
+ 748              	.L37:
+ 749              		.align	2
+ 750              	.L36:
+ 751 0088 00000000 		.word	CAN_FilterId.0
+ 752 008c 00640040 		.word	1073767424
+ 753              		.cfi_endproc
+ 754              	.LFE72:
+ 756              		.section	.text.TUFAN_CAN_GPIO_Init,"ax",%progbits
+ARM GAS  /tmp/ccgfVqt0.s 			page 19
+
+
+ 757              		.align	1
+ 758              		.global	TUFAN_CAN_GPIO_Init
+ 759              		.syntax unified
+ 760              		.thumb
+ 761              		.thumb_func
+ 763              	TUFAN_CAN_GPIO_Init:
+ 764              	.LFB73:
+ 266:Core/Src/CAN_Driver.c **** 
+ 267:Core/Src/CAN_Driver.c **** 
+ 268:Core/Src/CAN_Driver.c **** 
+ 269:Core/Src/CAN_Driver.c **** void TUFAN_CAN_GPIO_Init(void){
+ 765              		.loc 1 269 31 is_stmt 1 view -0
+ 766              		.cfi_startproc
+ 767              		@ args = 0, pretend = 0, frame = 0
+ 768              		@ frame_needed = 0, uses_anonymous_args = 0
+ 769              		@ link register save eliminated.
+ 270:Core/Src/CAN_Driver.c ****     /*
+ 271:Core/Src/CAN_Driver.c ****     //PA11 input mode
+ 272:Core/Src/CAN_Driver.c ****     GPIOA->CRH &= ~(1<<12);
+ 273:Core/Src/CAN_Driver.c ****     GPIOA->CRH &= ~(1<<13);
+ 274:Core/Src/CAN_Driver.c ****     //PA11 floating input
+ 275:Core/Src/CAN_Driver.c ****     GPIOA->CRH |= (1<<14);
+ 276:Core/Src/CAN_Driver.c ****     GPIOA->CRH = ~(1<<15);
+ 277:Core/Src/CAN_Driver.c ****     //PA12 output mode, max speed 50 MHz
+ 278:Core/Src/CAN_Driver.c ****     GPIOA -> CRH |= (1<<16);
+ 279:Core/Src/CAN_Driver.c ****     GPIOA -> CRH |= (1<<17);
+ 280:Core/Src/CAN_Driver.c ****     //PA12 alternate function output push-pull
+ 281:Core/Src/CAN_Driver.c ****     GPIOA -> CRH &= ~(1<<18);
+ 282:Core/Src/CAN_Driver.c ****     GPIOA -> CRH |= (1<<19);
+ 283:Core/Src/CAN_Driver.c ****   */
+ 284:Core/Src/CAN_Driver.c ****     GPIOA->CRH = 0x444B4444;
+ 770              		.loc 1 284 5 view .LVU276
+ 771              		.loc 1 284 16 is_stmt 0 view .LVU277
+ 772 0000 064B     		ldr	r3, .L39
+ 773 0002 074A     		ldr	r2, .L39+4
+ 774 0004 5A60     		str	r2, [r3, #4]
+ 285:Core/Src/CAN_Driver.c ****     //CAN REMAP = 0
+ 286:Core/Src/CAN_Driver.c ****     AFIO->MAPR &= ~(1<<13); //w
+ 775              		.loc 1 286 5 is_stmt 1 view .LVU278
+ 776              		.loc 1 286 9 is_stmt 0 view .LVU279
+ 777 0006 A3F50063 		sub	r3, r3, #2048
+ 778 000a 5A68     		ldr	r2, [r3, #4]
+ 779              		.loc 1 286 16 view .LVU280
+ 780 000c 22F40052 		bic	r2, r2, #8192
+ 781 0010 5A60     		str	r2, [r3, #4]
+ 287:Core/Src/CAN_Driver.c ****     AFIO->MAPR &= ~(1<<14); //w
+ 782              		.loc 1 287 5 is_stmt 1 view .LVU281
+ 783              		.loc 1 287 9 is_stmt 0 view .LVU282
+ 784 0012 5A68     		ldr	r2, [r3, #4]
+ 785              		.loc 1 287 16 view .LVU283
+ 786 0014 22F48042 		bic	r2, r2, #16384
+ 787 0018 5A60     		str	r2, [r3, #4]
+ 288:Core/Src/CAN_Driver.c **** 
+ 289:Core/Src/CAN_Driver.c **** }
+ 788              		.loc 1 289 1 view .LVU284
+ 789 001a 7047     		bx	lr
+ 790              	.L40:
+ARM GAS  /tmp/ccgfVqt0.s 			page 20
+
+
+ 791              		.align	2
+ 792              	.L39:
+ 793 001c 00080140 		.word	1073809408
+ 794 0020 44444B44 		.word	1145783364
+ 795              		.cfi_endproc
+ 796              	.LFE73:
+ 798              		.section	.text.TUFAN_CAN_Init,"ax",%progbits
+ 799              		.align	1
+ 800              		.global	TUFAN_CAN_Init
+ 801              		.syntax unified
+ 802              		.thumb
+ 803              		.thumb_func
+ 805              	TUFAN_CAN_Init:
+ 806              	.LFB74:
+ 290:Core/Src/CAN_Driver.c **** 
+ 291:Core/Src/CAN_Driver.c **** 
+ 292:Core/Src/CAN_Driver.c **** void TUFAN_CAN_Init(void){
+ 807              		.loc 1 292 26 is_stmt 1 view -0
+ 808              		.cfi_startproc
+ 809              		@ args = 0, pretend = 0, frame = 0
+ 810              		@ frame_needed = 0, uses_anonymous_args = 0
+ 811 0000 08B5     		push	{r3, lr}
+ 812              		.cfi_def_cfa_offset 8
+ 813              		.cfi_offset 3, -8
+ 814              		.cfi_offset 14, -4
+ 293:Core/Src/CAN_Driver.c ****     TUFAN_CAN_CLOCK_ENABLE();
+ 815              		.loc 1 293 5 view .LVU286
+ 816 0002 FFF7FEFF 		bl	TUFAN_CAN_CLOCK_ENABLE
+ 817              	.LVL10:
+ 294:Core/Src/CAN_Driver.c ****     TUFAN_CAN_GPIO_Init();
+ 818              		.loc 1 294 5 view .LVU287
+ 819 0006 FFF7FEFF 		bl	TUFAN_CAN_GPIO_Init
+ 820              	.LVL11:
+ 295:Core/Src/CAN_Driver.c ****     TUFAN_CAN_Setup();
+ 821              		.loc 1 295 5 view .LVU288
+ 822 000a FFF7FEFF 		bl	TUFAN_CAN_Setup
+ 823              	.LVL12:
+ 296:Core/Src/CAN_Driver.c ****     TUFAN_CAN_SetFilter(33, STANDARD_FORMAT);
+ 824              		.loc 1 296 5 view .LVU289
+ 825 000e 0021     		movs	r1, #0
+ 826 0010 2120     		movs	r0, #33
+ 827 0012 FFF7FEFF 		bl	TUFAN_CAN_SetFilter
+ 828              	.LVL13:
+ 297:Core/Src/CAN_Driver.c ****     TUFAN_CAN_TestMode(CAN_BTR_SILM | CAN_BTR_LBKM);
+ 829              		.loc 1 297 5 view .LVU290
+ 830 0016 4FF04040 		mov	r0, #-1073741824
+ 831 001a FFF7FEFF 		bl	TUFAN_CAN_TestMode
+ 832              	.LVL14:
+ 298:Core/Src/CAN_Driver.c ****     TUFAN_CAN_Start();
+ 833              		.loc 1 298 5 view .LVU291
+ 834 001e FFF7FEFF 		bl	TUFAN_CAN_Start
+ 835              	.LVL15:
+ 299:Core/Src/CAN_Driver.c ****     TUFAN_CAN_WaitReady();
+ 836              		.loc 1 299 5 view .LVU292
+ 837 0022 FFF7FEFF 		bl	TUFAN_CAN_WaitReady
+ 838              	.LVL16:
+ 300:Core/Src/CAN_Driver.c **** 
+ARM GAS  /tmp/ccgfVqt0.s 			page 21
+
+
+ 301:Core/Src/CAN_Driver.c **** }
+ 839              		.loc 1 301 1 is_stmt 0 view .LVU293
+ 840 0026 08BD     		pop	{r3, pc}
+ 841              		.cfi_endproc
+ 842              	.LFE74:
+ 844              		.section	.text.USB_HP_CAN1_TX_IRQHandler,"ax",%progbits
+ 845              		.align	1
+ 846              		.global	USB_HP_CAN1_TX_IRQHandler
+ 847              		.syntax unified
+ 848              		.thumb
+ 849              		.thumb_func
+ 851              	USB_HP_CAN1_TX_IRQHandler:
+ 852              	.LFB75:
+ 302:Core/Src/CAN_Driver.c **** 
+ 303:Core/Src/CAN_Driver.c **** 
+ 304:Core/Src/CAN_Driver.c **** //CAN TRANSMIT INTERRUPT HANDLER
+ 305:Core/Src/CAN_Driver.c **** void USB_HP_CAN1_TX_IRQHandler(void){
+ 853              		.loc 1 305 37 is_stmt 1 view -0
+ 854              		.cfi_startproc
+ 855              		@ args = 0, pretend = 0, frame = 0
+ 856              		@ frame_needed = 0, uses_anonymous_args = 0
+ 857              		@ link register save eliminated.
+ 306:Core/Src/CAN_Driver.c **** 
+ 307:Core/Src/CAN_Driver.c ****     if( CAN1->TSR & (1<<0)) {            // request completed mbx 0
+ 858              		.loc 1 307 5 view .LVU295
+ 859              		.loc 1 307 13 is_stmt 0 view .LVU296
+ 860 0000 084B     		ldr	r3, .L45
+ 861 0002 9B68     		ldr	r3, [r3, #8]
+ 862              		.loc 1 307 7 view .LVU297
+ 863 0004 13F0010F 		tst	r3, #1
+ 864 0008 0BD0     		beq	.L43
+ 308:Core/Src/CAN_Driver.c ****         CAN1->TSR |= (1<<0);            // reset request complete mbx 0
+ 865              		.loc 1 308 9 is_stmt 1 view .LVU298
+ 866              		.loc 1 308 13 is_stmt 0 view .LVU299
+ 867 000a 064B     		ldr	r3, .L45
+ 868 000c 9A68     		ldr	r2, [r3, #8]
+ 869              		.loc 1 308 19 view .LVU300
+ 870 000e 42F00102 		orr	r2, r2, #1
+ 871 0012 9A60     		str	r2, [r3, #8]
+ 309:Core/Src/CAN_Driver.c ****         CAN1->IER &= ~(1<<0);           // disable TME interrupt
+ 872              		.loc 1 309 9 is_stmt 1 view .LVU301
+ 873              		.loc 1 309 13 is_stmt 0 view .LVU302
+ 874 0014 5A69     		ldr	r2, [r3, #20]
+ 875              		.loc 1 309 19 view .LVU303
+ 876 0016 22F00102 		bic	r2, r2, #1
+ 877 001a 5A61     		str	r2, [r3, #20]
+ 310:Core/Src/CAN_Driver.c **** 
+ 311:Core/Src/CAN_Driver.c ****         CAN_TxRdy = 1;                  // set transmit flag
+ 878              		.loc 1 311 9 is_stmt 1 view .LVU304
+ 879              		.loc 1 311 19 is_stmt 0 view .LVU305
+ 880 001c 024B     		ldr	r3, .L45+4
+ 881 001e 0122     		movs	r2, #1
+ 882 0020 1A60     		str	r2, [r3]
+ 883              	.L43:
+ 312:Core/Src/CAN_Driver.c ****     }
+ 313:Core/Src/CAN_Driver.c **** }
+ 884              		.loc 1 313 1 view .LVU306
+ARM GAS  /tmp/ccgfVqt0.s 			page 22
+
+
+ 885 0022 7047     		bx	lr
+ 886              	.L46:
+ 887              		.align	2
+ 888              	.L45:
+ 889 0024 00640040 		.word	1073767424
+ 890 0028 00000000 		.word	CAN_TxRdy
+ 891              		.cfi_endproc
+ 892              	.LFE75:
+ 894              		.section	.text.USB_LP_CAN1_RX0_IRQHandler,"ax",%progbits
+ 895              		.align	1
+ 896              		.global	USB_LP_CAN1_RX0_IRQHandler
+ 897              		.syntax unified
+ 898              		.thumb
+ 899              		.thumb_func
+ 901              	USB_LP_CAN1_RX0_IRQHandler:
+ 902              	.LFB76:
+ 314:Core/Src/CAN_Driver.c **** 
+ 315:Core/Src/CAN_Driver.c **** //CAN RECEIVE INTERRUPT HANDLER
+ 316:Core/Src/CAN_Driver.c **** void USB_LP_CAN1_RX0_IRQHandler(void){
+ 903              		.loc 1 316 38 is_stmt 1 view -0
+ 904              		.cfi_startproc
+ 905              		@ args = 0, pretend = 0, frame = 0
+ 906              		@ frame_needed = 0, uses_anonymous_args = 0
+ 907 0000 08B5     		push	{r3, lr}
+ 908              		.cfi_def_cfa_offset 8
+ 909              		.cfi_offset 3, -8
+ 910              		.cfi_offset 14, -4
+ 317:Core/Src/CAN_Driver.c ****     
+ 318:Core/Src/CAN_Driver.c ****     if( CAN1->RF0R & 0x3){               // message pending?
+ 911              		.loc 1 318 5 view .LVU308
+ 912              		.loc 1 318 13 is_stmt 0 view .LVU309
+ 913 0002 064B     		ldr	r3, .L51
+ 914 0004 DB68     		ldr	r3, [r3, #12]
+ 915              		.loc 1 318 7 view .LVU310
+ 916 0006 13F0030F 		tst	r3, #3
+ 917 000a 00D1     		bne	.L50
+ 918              	.L47:
+ 319:Core/Src/CAN_Driver.c ****         TUFAN_CAN_ReadMessage(&CAN_RxMsg);    // read the message
+ 320:Core/Src/CAN_Driver.c ****         CAN_RxRdy = 1;                  // set receive flag
+ 321:Core/Src/CAN_Driver.c ****     }
+ 322:Core/Src/CAN_Driver.c **** }
+ 919              		.loc 1 322 1 view .LVU311
+ 920 000c 08BD     		pop	{r3, pc}
+ 921              	.L50:
+ 319:Core/Src/CAN_Driver.c ****         TUFAN_CAN_ReadMessage(&CAN_RxMsg);    // read the message
+ 922              		.loc 1 319 9 is_stmt 1 view .LVU312
+ 923 000e 0448     		ldr	r0, .L51+4
+ 924 0010 FFF7FEFF 		bl	TUFAN_CAN_ReadMessage
+ 925              	.LVL17:
+ 320:Core/Src/CAN_Driver.c ****     }
+ 926              		.loc 1 320 9 view .LVU313
+ 320:Core/Src/CAN_Driver.c ****     }
+ 927              		.loc 1 320 19 is_stmt 0 view .LVU314
+ 928 0014 034B     		ldr	r3, .L51+8
+ 929 0016 0122     		movs	r2, #1
+ 930 0018 1A60     		str	r2, [r3]
+ 931              		.loc 1 322 1 view .LVU315
+ARM GAS  /tmp/ccgfVqt0.s 			page 23
+
+
+ 932 001a F7E7     		b	.L47
+ 933              	.L52:
+ 934              		.align	2
+ 935              	.L51:
+ 936 001c 00640040 		.word	1073767424
+ 937 0020 00000000 		.word	CAN_RxMsg
+ 938 0024 00000000 		.word	CAN_RxRdy
+ 939              		.cfi_endproc
+ 940              	.LFE76:
+ 942              		.section	.bss.CAN_FilterId.0,"aw",%nobits
+ 943              		.align	1
+ 946              	CAN_FilterId.0:
+ 947 0000 0000     		.space	2
+ 948              		.global	CAN_RxRdy
+ 949              		.section	.bss.CAN_RxRdy,"aw",%nobits
+ 950              		.align	2
+ 953              	CAN_RxRdy:
+ 954 0000 00000000 		.space	4
+ 955              		.global	CAN_TxRdy
+ 956              		.section	.bss.CAN_TxRdy,"aw",%nobits
+ 957              		.align	2
+ 960              	CAN_TxRdy:
+ 961 0000 00000000 		.space	4
+ 962              		.global	CAN_RxMsg
+ 963              		.section	.bss.CAN_RxMsg,"aw",%nobits
+ 964              		.align	2
+ 967              	CAN_RxMsg:
+ 968 0000 00000000 		.space	16
+ 968      00000000 
+ 968      00000000 
+ 968      00000000 
+ 969              		.global	CAN_TxMsg
+ 970              		.section	.bss.CAN_TxMsg,"aw",%nobits
+ 971              		.align	2
+ 974              	CAN_TxMsg:
+ 975 0000 00000000 		.space	16
+ 975      00000000 
+ 975      00000000 
+ 975      00000000 
+ 976              		.text
+ 977              	.Letext0:
+ 978              		.file 2 "/home/bugraaa/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/arm-n
+ 979              		.file 3 "/home/bugraaa/.config/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-tools/arm-n
+ 980              		.file 4 "Drivers/CMSIS/Include/core_cm3.h"
+ 981              		.file 5 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f103xb.h"
+ 982              		.file 6 "Drivers/CMSIS/Device/ST/STM32F1xx/Include/stm32f1xx.h"
+ 983              		.file 7 "Core/Inc/CAN_Driver.h"
+ARM GAS  /tmp/ccgfVqt0.s 			page 24
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 CAN_Driver.c
-     /tmp/ccG9i6Tn.s:19     .text.CAN_CLOCK_ENABLE:00000000 $t
-     /tmp/ccG9i6Tn.s:25     .text.CAN_CLOCK_ENABLE:00000000 CAN_CLOCK_ENABLE
-     /tmp/ccG9i6Tn.s:56     .text.CAN_CLOCK_ENABLE:0000001c $d
-     /tmp/ccG9i6Tn.s:61     .text.CAN_Setup:00000000 $t
-     /tmp/ccG9i6Tn.s:67     .text.CAN_Setup:00000000 CAN_Setup
-     /tmp/ccG9i6Tn.s:120    .text.CAN_Setup:00000034 $d
-     /tmp/ccG9i6Tn.s:127    .text.CAN_StartNormalMode:00000000 $t
-     /tmp/ccG9i6Tn.s:133    .text.CAN_StartNormalMode:00000000 CAN_StartNormalMode
-     /tmp/ccG9i6Tn.s:161    .text.CAN_StartNormalMode:00000018 $d
-     /tmp/ccG9i6Tn.s:166    .text.CAN_TestMode:00000000 $t
-     /tmp/ccG9i6Tn.s:172    .text.CAN_TestMode:00000000 CAN_TestMode
-     /tmp/ccG9i6Tn.s:201    .text.CAN_TestMode:00000018 $d
-     /tmp/ccG9i6Tn.s:206    .text.CAN_WaitReady:00000000 $t
-     /tmp/ccG9i6Tn.s:212    .text.CAN_WaitReady:00000000 CAN_WaitReady
-     /tmp/ccG9i6Tn.s:237    .text.CAN_WaitReady:00000014 $d
-     /tmp/ccG9i6Tn.s:624    .bss.CAN_TxRdy:00000000 CAN_TxRdy
-     /tmp/ccG9i6Tn.s:243    .text.CAN_WriteMessage:00000000 $t
-     /tmp/ccG9i6Tn.s:249    .text.CAN_WriteMessage:00000000 CAN_WriteMessage
-     /tmp/ccG9i6Tn.s:384    .text.CAN_WriteMessage:000000b8 $d
-     /tmp/ccG9i6Tn.s:389    .text.CAN_ReadMessage:00000000 $t
-     /tmp/ccG9i6Tn.s:395    .text.CAN_ReadMessage:00000000 CAN_ReadMessage
-     /tmp/ccG9i6Tn.s:409    .text.CAN_SetFilter:00000000 $t
-     /tmp/ccG9i6Tn.s:415    .text.CAN_SetFilter:00000000 CAN_SetFilter
-     /tmp/ccG9i6Tn.s:518    .text.CAN_SetFilter:00000088 $d
-     /tmp/ccG9i6Tn.s:610    .bss.CAN_FilterId.0:00000000 CAN_FilterId.0
-     /tmp/ccG9i6Tn.s:524    .text.CAN_GPIO_Init:00000000 $t
-     /tmp/ccG9i6Tn.s:530    .text.CAN_GPIO_Init:00000000 CAN_GPIO_Init
-     /tmp/ccG9i6Tn.s:602    .text.CAN_GPIO_Init:00000058 $d
-     /tmp/ccG9i6Tn.s:607    .bss.CAN_FilterId.0:00000000 $d
-     /tmp/ccG9i6Tn.s:617    .bss.CAN_RxRdy:00000000 CAN_RxRdy
-     /tmp/ccG9i6Tn.s:614    .bss.CAN_RxRdy:00000000 $d
-     /tmp/ccG9i6Tn.s:621    .bss.CAN_TxRdy:00000000 $d
-     /tmp/ccG9i6Tn.s:631    .bss.CAN_RxMsg:00000000 CAN_RxMsg
-     /tmp/ccG9i6Tn.s:628    .bss.CAN_RxMsg:00000000 $d
-     /tmp/ccG9i6Tn.s:638    .bss.CAN_TxMsg:00000000 CAN_TxMsg
-     /tmp/ccG9i6Tn.s:635    .bss.CAN_TxMsg:00000000 $d
+     /tmp/ccgfVqt0.s:19     .text.TUFAN_CAN_CLOCK_ENABLE:00000000 $t
+     /tmp/ccgfVqt0.s:25     .text.TUFAN_CAN_CLOCK_ENABLE:00000000 TUFAN_CAN_CLOCK_ENABLE
+     /tmp/ccgfVqt0.s:174    .text.TUFAN_CAN_CLOCK_ENABLE:000000b8 $d
+     /tmp/ccgfVqt0.s:179    .text.TUFAN_CAN_Setup:00000000 $t
+     /tmp/ccgfVqt0.s:185    .text.TUFAN_CAN_Setup:00000000 TUFAN_CAN_Setup
+     /tmp/ccgfVqt0.s:259    .text.TUFAN_CAN_Setup:00000054 $d
+     /tmp/ccgfVqt0.s:267    .text.TUFAN_CAN_Start:00000000 $t
+     /tmp/ccgfVqt0.s:273    .text.TUFAN_CAN_Start:00000000 TUFAN_CAN_Start
+     /tmp/ccgfVqt0.s:301    .text.TUFAN_CAN_Start:00000018 $d
+     /tmp/ccgfVqt0.s:306    .text.TUFAN_CAN_TestMode:00000000 $t
+     /tmp/ccgfVqt0.s:312    .text.TUFAN_CAN_TestMode:00000000 TUFAN_CAN_TestMode
+     /tmp/ccgfVqt0.s:332    .text.TUFAN_CAN_TestMode:0000000c $d
+     /tmp/ccgfVqt0.s:337    .text.TUFAN_CAN_WaitReady:00000000 $t
+     /tmp/ccgfVqt0.s:343    .text.TUFAN_CAN_WaitReady:00000000 TUFAN_CAN_WaitReady
+     /tmp/ccgfVqt0.s:368    .text.TUFAN_CAN_WaitReady:00000014 $d
+     /tmp/ccgfVqt0.s:960    .bss.CAN_TxRdy:00000000 CAN_TxRdy
+     /tmp/ccgfVqt0.s:374    .text.TUFAN_CAN_WriteMessage:00000000 $t
+     /tmp/ccgfVqt0.s:380    .text.TUFAN_CAN_WriteMessage:00000000 TUFAN_CAN_WriteMessage
+     /tmp/ccgfVqt0.s:515    .text.TUFAN_CAN_WriteMessage:000000b8 $d
+     /tmp/ccgfVqt0.s:520    .text.TUFAN_CAN_ReadMessage:00000000 $t
+     /tmp/ccgfVqt0.s:526    .text.TUFAN_CAN_ReadMessage:00000000 TUFAN_CAN_ReadMessage
+     /tmp/ccgfVqt0.s:637    .text.TUFAN_CAN_ReadMessage:00000078 $d
+     /tmp/ccgfVqt0.s:642    .text.TUFAN_CAN_SetFilter:00000000 $t
+     /tmp/ccgfVqt0.s:648    .text.TUFAN_CAN_SetFilter:00000000 TUFAN_CAN_SetFilter
+     /tmp/ccgfVqt0.s:751    .text.TUFAN_CAN_SetFilter:00000088 $d
+     /tmp/ccgfVqt0.s:946    .bss.CAN_FilterId.0:00000000 CAN_FilterId.0
+     /tmp/ccgfVqt0.s:757    .text.TUFAN_CAN_GPIO_Init:00000000 $t
+     /tmp/ccgfVqt0.s:763    .text.TUFAN_CAN_GPIO_Init:00000000 TUFAN_CAN_GPIO_Init
+     /tmp/ccgfVqt0.s:793    .text.TUFAN_CAN_GPIO_Init:0000001c $d
+     /tmp/ccgfVqt0.s:799    .text.TUFAN_CAN_Init:00000000 $t
+     /tmp/ccgfVqt0.s:805    .text.TUFAN_CAN_Init:00000000 TUFAN_CAN_Init
+     /tmp/ccgfVqt0.s:845    .text.USB_HP_CAN1_TX_IRQHandler:00000000 $t
+     /tmp/ccgfVqt0.s:851    .text.USB_HP_CAN1_TX_IRQHandler:00000000 USB_HP_CAN1_TX_IRQHandler
+     /tmp/ccgfVqt0.s:889    .text.USB_HP_CAN1_TX_IRQHandler:00000024 $d
+     /tmp/ccgfVqt0.s:895    .text.USB_LP_CAN1_RX0_IRQHandler:00000000 $t
+     /tmp/ccgfVqt0.s:901    .text.USB_LP_CAN1_RX0_IRQHandler:00000000 USB_LP_CAN1_RX0_IRQHandler
+     /tmp/ccgfVqt0.s:936    .text.USB_LP_CAN1_RX0_IRQHandler:0000001c $d
+     /tmp/ccgfVqt0.s:967    .bss.CAN_RxMsg:00000000 CAN_RxMsg
+     /tmp/ccgfVqt0.s:953    .bss.CAN_RxRdy:00000000 CAN_RxRdy
+     /tmp/ccgfVqt0.s:943    .bss.CAN_FilterId.0:00000000 $d
+     /tmp/ccgfVqt0.s:950    .bss.CAN_RxRdy:00000000 $d
+     /tmp/ccgfVqt0.s:957    .bss.CAN_TxRdy:00000000 $d
+     /tmp/ccgfVqt0.s:964    .bss.CAN_RxMsg:00000000 $d
+     /tmp/ccgfVqt0.s:974    .bss.CAN_TxMsg:00000000 CAN_TxMsg
+     /tmp/ccgfVqt0.s:971    .bss.CAN_TxMsg:00000000 $d
 
 NO UNDEFINED SYMBOLS

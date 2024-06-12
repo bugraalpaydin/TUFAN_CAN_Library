@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "CAN_Driver.h"
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -64,7 +65,6 @@ static void MX_GPIO_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -73,15 +73,21 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  CAN_CLOCK_ENABLE();
-  CAN_GPIO_Init();
-  CAN_Setup();
-  //CAN_TestMode(CAN_BTR_SILM | CAN_BTR_LBKM);
-  CAN_SetFilter(33, STANDARD_FORMAT);
-  CAN_StartNormalMode();
-  CAN_WaitReady();
-
-  CAN_TxMsg.id = 33;
+  
+  TUFAN_CAN_CLOCK_ENABLE();
+  TUFAN_CAN_GPIO_Init();
+  TUFAN_CAN_Setup();
+  TUFAN_CAN_TestMode(CAN_BTR_SILM | CAN_BTR_LBKM);
+  TUFAN_CAN_SetFilter(33, STANDARD_FORMAT);
+  TUFAN_CAN_Start();
+  TUFAN_CAN_WaitReady();
+  
+  //TUFAN_CAN_Init();
+  
+  uint32_t Fplck1 = HAL_RCC_GetPCLK1Freq();
+  printf("%d", &Fplck1);
+  
+  CAN_TxMsg.id = 0x33;
   for(int i = 0; i<8; i++) CAN_TxMsg.data[i] = 1;
   CAN_TxMsg.len = 1;
   CAN_TxMsg.format = STANDARD_FORMAT;
@@ -105,18 +111,15 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-      if(CAN_TxRdy){
-        CAN_TxRdy = 0;
-
-        CAN_WriteMessage(&CAN_TxMsg);
-      }
-      HAL_Delay(100000);
+        //TUFAN_CAN_WriteMessage(&CAN_TxMsg);
+        //TUFAN_CAN_ReadMessage(&CAN_RxMsg);
+        HAL_Delay(100);
+  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
 }
+  /* USER CODE END 3 */
 
 /**
   * @brief System Clock Configuration
@@ -135,7 +138,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI_DIV2;
-  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL9;
+  RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL2;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -150,7 +153,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
   {
     Error_Handler();
   }

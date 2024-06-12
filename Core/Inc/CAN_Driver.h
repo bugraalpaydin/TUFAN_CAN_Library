@@ -30,6 +30,7 @@
 */
 
 #include "stm32f1xx.h"
+#include "stm32f1xx_hal_rcc.h"
 #include <stdint.h>
 
 
@@ -48,15 +49,17 @@ typedef struct{
 }CAN_Msg;
 
 
-void CAN_CLOCK_ENABLE(void);
-void CAN_Setup(void);
-void CAN_StartNormalMode(void);
-void CAN_WaitReady(void);
-void CAN_TestMode(unsigned int testmode);
-void CAN_SetFilter(unsigned int id, unsigned char format);
-void CAN_WriteMessage(CAN_Msg *msg);
-void CAN_ReadMessage(CAN_Msg *msg);
-void CAN_GPIO_Init(void);
+void TUFAN_CAN_CLOCK_ENABLE(void);
+void TUFAN_CAN_Setup(void);
+void TUFAN_CAN_Start(void);
+void TUFAN_CAN_WaitReady(void);
+void TUFAN_CAN_TestMode(unsigned int testmode);
+void TUFAN_CAN_SetFilter(unsigned int id, unsigned char format);
+void TUFAN_CAN_WriteMessage(CAN_Msg *msg);
+void TUFAN_CAN_ReadMessage(CAN_Msg *msg);
+void TUFAN_CAN_GPIO_Init(void);
+void TUFAN_CAN_Init(void);
+
 
 extern CAN_Msg CAN_TxMsg;       // CAN message for sending
 extern CAN_Msg CAN_RxMsg;       // CAN message for receiving
